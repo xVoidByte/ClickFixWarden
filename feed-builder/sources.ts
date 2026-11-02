@@ -93,6 +93,18 @@ export function ageDays(ts: string | null | undefined, now: Date): number {
   return Number.isFinite(t) ? (now.getTime() - t) / 86_400_000 : Infinity;
 }
 
+function isHostname(host: string): boolean {
+  return host.includes('.') && /^[a-z0-9_.-]+$/.test(host) && !/^0x[0-9a-f]+$/.test(host);
+}
+
+/** An address reported with port 80 or 443, like http://1.2.3.4:443/x, also gets the key a browser makes once it drops that port. */
+function urlKeys(raw: string): string[] {
+  const key = urlKey(raw);
+  if (!key) return [];
+  const portless = key.replace(/^u:([^/]+):(?:80|443)(?=\/)/, 'u:$1');
+  return portless === key ? [key] : [key, portless];
+}
+
 function add(entries: Entries, key: string, record: FeedRecordTuple): void {
   const list = entries.get(key);
   if (!list) entries.set(key, [record]);
@@ -109,12 +121,12 @@ export function fromUrlhaus(csv: string, opts: BuildOptions, entries: Entries): 
     if (!url) continue;
     const online = row.url_status === 'online';
     if (!online && ageDays(row.dateadded, opts.now) > opts.maxAgeDays) continue;
-    const key = urlKey(url);
-    if (!key) continue;
+    const keys = urlKeys(url);
+    if (!keys.length) continue;
     const tags = splitTags(row.tags ?? '');
     const category: Category = isClickFix(tags, opts) ? 'clickfix' : 'malware';
     // Only ClickFix tags are kept for URLhaus, the rest (elf, mirai, 32-bit) mean nothing to a visitor.
-    add(entries, key, ['urlhaus', category, '', day(row.dateadded), row.id, category === 'clickfix' ? tags.slice(0, 3) : []]);
+    for (const key of keys) add(entries, key, ['urlhaus', category, '', day(row.dateadded), row.id, category === 'clickfix' ? tags.slice(0, 3) : []]);
     count++;
   }
   return count;
@@ -221,14 +233,15 @@ function addThreatfox(rows: ThreatfoxRow[], opts: BuildOptions, entries: Entries
     if (type === 'domain') {
       if (confidence < opts.minConfidence || ageDays(seen, opts.now) > opts.maxAgeDays) continue;
       const host = cleanHost(value);
-      if (!host || noHost.has(host)) continue;
+      // Some "domains" are blockchain contract addresses like 0xf202...e5779, nobody can browse to those.
+      if (!host || !isHostname(host) || noHost.has(host)) continue;
       add(entries, hostKey(host), record);
       count++;
     } else if (type === 'url') {
       if (confidence < opts.minConfidence || ageDays(seen, opts.now) > opts.maxAgeDays) continue;
-      const key = urlKey(value);
-      if (!key) continue;
-      add(entries, key, record);
+      const keys = urlKeys(value);
+      if (!keys.length) continue;
+      for (const key of keys) add(entries, key, record);
       count++;
     } else if (type === 'ip:port') {
       if (confidence < opts.minIpConfidence || ageDays(seen, opts.now) > opts.ipMaxAgeDays) continue;

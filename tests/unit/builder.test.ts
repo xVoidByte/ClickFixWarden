@@ -115,6 +115,30 @@ describe('ThreatFox', () => {
   });
 });
 
+describe('addresses a browser would write differently', () => {
+  const entries: Entries = new Map();
+  fromUrlhaus(
+    `# id,dateadded,url,url_status,last_online,threat,tags,urlhaus_link,reporter\n"9201","2026-10-30 08:00:00","http://192.0.2.80:443/boot","online","","malware_download","sh","",""\n`,
+    opts,
+    entries,
+  );
+  fromThreatfoxApi(
+    JSON.stringify({
+      query_status: 'ok',
+      data: [{ id: '2010003', ioc: '0xf20221c0cf767eee759bbe1fb8dd76eaef0e5779', ioc_type: 'domain', threat_type: 'payload_delivery', malware_printable: 'ClearFake', malware_alias: null, confidence_level: 100, first_seen: '2026-10-31 11:29:00 UTC', last_seen: null, tags: ['etherhide'] }],
+    }),
+    opts,
+    entries,
+  );
+  it('keeps an address reported with port 443 findable over https', () => {
+    expect(entries.has('u:192.0.2.80:443/boot')).toBe(true);
+    expect(entries.has('u:192.0.2.80/boot')).toBe(true);
+  });
+  it('skips blockchain contract addresses reported as domains', () => {
+    expect(entries.has('h:0xf20221c0cf767eee759bbe1fb8dd76eaef0e5779')).toBe(false);
+  });
+});
+
 describe('ThreatFox API', () => {
   const entries: Entries = new Map();
   const answer = JSON.stringify({
