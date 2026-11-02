@@ -84,6 +84,14 @@ test.describe('lure pages', () => {
     expect(await readClipboard(page)).toContain(SAFE);
   });
 
+  test('a writeText wrapped later by someone else still reaches our check first', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/wrapped-by-another.html');
+    await page.click('#cb');
+    await expect.poll(() => overlayShown(page)).toBe(true);
+    await expect.poll(async () => (await lastDetection(sw))?.kind).toBe('clipboard');
+  });
+
   test('borderline command is stopped when the paste steps appear after the copy', async ({ context, sw }) => {
     const page = await context.newPage();
     await page.goto(BASE + '/lures/late-instructions.html');

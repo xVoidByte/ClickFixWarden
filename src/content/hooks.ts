@@ -46,11 +46,35 @@ export function installHooks(root: Realm): void {
     }
   }
 
-  function hook(obj: object | undefined, name: string, handler: (target: AnyFn, thisArg: unknown, args: unknown[]) => unknown): void {
+  type Handler = (target: AnyFn, thisArg: unknown, args: unknown[]) => unknown;
+  // Clipboard hooks that must stay the outermost wrapper, another extension or the page may wrap them later without calling through.
+  const guarded: { obj: object; name: string; handler: Handler; proxy: AnyFn }[] = [];
+  const ours = new WeakSet<object>();
+
+  function hook(obj: object | undefined, name: string, handler: Handler, guard = false): void {
     if (!obj) return;
     const desc = getDescriptor(obj, name);
     if (!desc || typeof desc.value !== 'function') return;
-    defineProperty(obj, name, { ...desc, value: new ProxyC(desc.value as AnyFn, { apply: handler }) });
+    const proxy = new ProxyC(desc.value as AnyFn, { apply: handler });
+    ours.add(proxy);
+    defineProperty(obj, name, { ...desc, value: proxy });
+    if (guard) guarded.push({ obj, name, handler, proxy });
+  }
+
+  /** Wraps again on top of anything added after us, so a click or key press always reaches our check first. */
+  function reassert(): void {
+    for (const g of guarded) {
+      try {
+        const desc = getDescriptor(g.obj, g.name);
+        if (!desc || typeof desc.value !== 'function' || ours.has(desc.value)) continue;
+        const proxy = new ProxyC(desc.value as AnyFn, { apply: g.handler });
+        ours.add(proxy);
+        defineProperty(g.obj, g.name, { ...desc, value: proxy });
+        g.proxy = proxy;
+      } catch {
+        // a frozen property stays as it is
+      }
+    }
   }
 
   function hookAccessor(obj: object | undefined, name: string, kind: 'get' | 'set', handler: (target: AnyFn, thisArg: unknown, args: unknown[]) => unknown): void {
@@ -92,13 +116,17 @@ export function installHooks(root: Realm): void {
     }
     if (patched.has(key)) return;
     patched.add(key);
+    // Re-wrap right before the click or key press that a lure needs, on DOMContentLoaded and load too.
+    for (const type of ['pointerdown', 'mousedown', 'touchstart', 'keydown']) w.addEventListener(type, reassert, true);
+    w.addEventListener('DOMContentLoaded', reassert, true);
+    w.addEventListener('load', reassert, true);
 
     // navigator.clipboard.writeText(text)
     hook(w.Clipboard?.prototype, 'writeText', (target, thisArg, args) => {
       const text = typeof args[0] === 'string' ? args[0] : String(args[0] ?? '');
       if (text && check('clipboard-write', text)) return apply(target, thisArg, [safeText()]);
       return apply(target, thisArg, args);
-    });
+    }, true);
 
     // navigator.clipboard.write([new ClipboardItem({...})])
     hook(w.Clipboard?.prototype, 'write', (target, thisArg, args) => {
@@ -125,7 +153,7 @@ export function installHooks(root: Realm): void {
         }
         return apply(target, thisArg, args);
       })();
-    });
+    }, true);
 
     // document.execCommand('copy') on a hidden textarea
     hook(w.Document?.prototype, 'execCommand', (target, thisArg, args) => {
@@ -151,7 +179,7 @@ export function installHooks(root: Realm): void {
       } finally {
         send(EVT.mark, 'end');
       }
-    });
+    }, true);
 
     // event.clipboardData.setData('text/plain', ...) inside a copy handler
     hook(w.DataTransfer?.prototype, 'setData', (target, thisArg, args) => {
@@ -163,7 +191,7 @@ export function installHooks(root: Realm): void {
           return apply(target, thisArg, [args[0], isHtml ? escapeHtml(safeText()) : safeText()]);
       }
       return apply(target, thisArg, args);
-    });
+    }, true);
 
     // Full-screen fake update pages
     for (const name of ['requestFullscreen', 'webkitRequestFullscreen', 'webkitRequestFullScreen']) {

