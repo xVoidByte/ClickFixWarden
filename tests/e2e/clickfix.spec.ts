@@ -84,6 +84,13 @@ test.describe('lure pages', () => {
     expect(await readClipboard(page)).toContain(SAFE);
   });
 
+  test('an instruction box injected late into a long busy page, inside a closed shadow root, is found', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/shadow-box-late.html');
+    await expect.poll(() => overlayShown(page), { timeout: 15_000 }).toBe(true);
+    await expect.poll(async () => (await lastDetection(sw))?.kind).toBe('page-instructions');
+  });
+
   test('a writeText wrapped later by someone else still reaches our check first', async ({ context, sw }) => {
     const page = await context.newPage();
     await page.goto(BASE + '/lures/wrapped-by-another.html');
@@ -211,6 +218,14 @@ test.describe('normal pages stay untouched', () => {
     const page = await context.newPage();
     await page.goto(BASE + '/benign/security-news.html');
     await page.waitForTimeout(3000);
+    expect(await overlayShown(page)).toBe(false);
+    expect(await detectionCount(sw)).toBe(0);
+  });
+
+  test('news article that quotes a lure next to share buttons raises nothing', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/benign/news-quotes-lure.html');
+    await page.waitForTimeout(4000);
     expect(await overlayShown(page)).toBe(false);
     expect(await detectionCount(sw)).toBe(0);
   });

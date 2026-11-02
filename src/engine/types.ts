@@ -48,6 +48,8 @@ export interface RulesFile {
     maxTextLength: number;
     standaloneMinScore: number;
     standaloneMaxTextLength: number;
+    /** Largest block of text that still counts as one instruction box inside a longer page, 3000 when missing. */
+    boxMaxTextLength?: number;
     instructions: PageRule[];
   };
   trigger: {

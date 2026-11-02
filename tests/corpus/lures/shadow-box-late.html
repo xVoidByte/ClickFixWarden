@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Fire safety equipment</title>
+  </head>
+  <body>
+    <h1>Fire safety equipment</h1>
+    <div id="slider">Slide 0</div>
+    <article id="article"></article>
+    <script>
+      // A hacked shop page, long, with a slider that changes all the time, like the ClearFake site seen live.
+      const para = 'Our certified technicians install, inspect and refill extinguishers, hose reels and alarm panels for offices, warehouses and homes across the region. ';
+      document.getElementById('article').innerHTML = Array.from({ length: 110 }, (_, i) => `<p>${i + 1}. ${para}</p>`).join('');
+      let n = 0;
+      setInterval(() => (document.getElementById('slider').textContent = 'Slide ' + ++n), 150);
+
+      // Three seconds later the lure box arrives inside a closed shadow root, modelled on the live one.
+      setTimeout(() => {
+        const host = document.createElement('div');
+        document.body.prepend(host);
+        const root = host.attachShadow({ mode: 'closed' });
+        root.innerHTML = `
+          <div class="verify-window">
+            <main>
+              <p>To better prove you are not a robot, please:</p>
+              <ol>
+                <li><p>Press Windows Key + <b>X</b> combination to open Power User menu.</p></li>
+                <li><p>Press <b>I</b> to open Windows PowerShell or Terminal.</p></li>
+                <li><p>In the verification window, press <b>Ctrl</b> + <b>V</b>.</p></li>
+                <li><p>Press <b>Enter</b> on your keyboard to finish.</p></li>
+              </ol>
+            </main>
+            <div class="footer"><span>Perform the steps above to finish verification.</span><button type="button">Verify</button></div>
+          </div>`;
+      }, 3000);
+    </script>
+  </body>
+</html>

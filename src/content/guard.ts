@@ -12,6 +12,7 @@ import type { AlertData, DetectionAction, DetectionKind, Message, PageStatus, Ta
 import { DEFAULT_SETTINGS, type EffectiveSettings, isTrusted, type Settings } from '../shared/settings';
 import { whatOfCommand, whyOfCommand, whyOfPage } from '../ui/explain';
 import { showAlert } from '../ui/overlay';
+import { findLureBox, hasLureControl, shadowRoots } from './dom-scan';
 import { type CheckDetail, EVT, type SignalDetail, safeText } from './protocol';
 
 export function startGuard(): void {
@@ -25,7 +26,8 @@ export function startGuard(): void {
   let lastPointer: { el: Element | null; time: number } = { el: null, time: 0 };
   let copyMark = 0;
   let pageCache: { time: number; v: PageVerdict } | null = null;
-  let scans = 0;
+  // The instruction box found in the page, it also raises the score of any command copied afterwards.
+  let lureBox: PageVerdict | null = null;
 
   const active = () => settings.enabled && !trusted;
 
@@ -100,7 +102,8 @@ export function startGuard(): void {
   }
 
   function context(manual: boolean, fresh = false): CommandContext {
-    const p = pageVerdict(fresh);
+    let p = pageVerdict(fresh);
+    if (lureBox && lureBox.score > p.score) p = lureBox;
     return { pageScore: p.score, pageReasons: p.reasons, trigger: trigger(), pageReported, web3: web3.mainnet || web3.testnet, manual };
   }
 
@@ -166,6 +169,7 @@ export function startGuard(): void {
     for (const delay of [400, 1000, 2000, 4000, 8000]) {
       setTimeout(() => {
         if (settled.has(payload) || !active() || !settings.clipboard) return;
+        scanPage();
         const v = evaluateCommand(payload, rules, context(false, true));
         if (v.level !== 'block') return;
         settled.add(payload);
@@ -363,29 +367,47 @@ export function startGuard(): void {
     if (url && externalScheme(url) && ev.cancelable && blockProtocol(url)) ev.preventDefault();
   });
 
-  // ---- pages that only tell you what to paste ----
+  // ---- the DOM of every page, watched for as long as it is open ----
+  const WATCH: MutationObserverInit = { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'open'] };
+  const watchedRoots = new WeakSet<Node>();
+  const watchStart = Date.now();
+  let scanTimer: number | undefined;
+  const observer = new MutationObserver(() => scheduleScan());
+
+  /** Throttled, not debounced, so a slider that changes every moment cannot keep the scan from running. */
+  function scheduleScan(): void {
+    if (lureBox || scanTimer !== undefined) return;
+    const wait = Date.now() - watchStart < 30_000 ? 1000 : 3000;
+    scanTimer = window.setTimeout(() => {
+      scanTimer = undefined;
+      scanPage();
+    }, wait);
+  }
+
   function scanPage(): void {
-    if (!active() || !settings.pageWarnings || scans > 8) return;
-    scans++;
+    if (!active() || lureBox) return;
+    const roots = shadowRoots();
+    // Changes inside a shadow root never reach the document observer, so each root gets watched on its own.
+    for (const root of roots) {
+      if (watchedRoots.has(root)) continue;
+      watchedRoots.add(root);
+      observer.observe(root, WATCH);
+    }
     const p = pageVerdict(true);
-    if (!p.standalone) return;
+    // A short page counts as a lure on its own only with a check or a Verify button, like a box inside a longer page.
+    const whole = p.standalone && document.body && (hasLureControl(document.body, null, rules) || roots.some((r) => hasLureControl(r.host, r, rules)));
+    const box = whole ? p : findLureBox(rules, roots);
+    if (!box) return;
+    lureBox = box;
+    observer.disconnect();
+    if (!settings.pageWarnings) return;
     present({ kind: 'page-instructions', host });
-    log('page-instructions', 'warned', { score: p.score, reasons: p.reasons.map((r) => r.id) });
-    scans = 99;
+    log('page-instructions', 'warned', { score: box.score, reasons: box.reasons.map((r) => r.id) });
   }
 
   function watchPage(): void {
-    setTimeout(scanPage, 1200);
-    let timer: number | undefined;
-    const observer = new MutationObserver(() => {
-      if (scans > 8) {
-        observer.disconnect();
-        return;
-      }
-      clearTimeout(timer);
-      timer = window.setTimeout(scanPage, 1500);
-    });
-    if (document.body) observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    observer.observe(document.documentElement, WATCH);
+    scheduleScan();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watchPage, { once: true });
   else watchPage();
