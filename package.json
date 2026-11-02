@@ -24,6 +24,7 @@
     "test:e2e": "npm run build:e2e && playwright test",
     "lint:firefox": "web-ext lint -s .output/firefox-mv3 --self-hosted=false",
     "feed:build": "tsx feed-builder/build-feed.ts",
+    "feed:verify": "tsx scripts/verify-feed.ts",
     "keys:generate": "tsx scripts/generate-keys.ts",
     "review:clickfix": "tsx scripts/review-new-clickfix.ts",
     "icons": "tsx scripts/render-icons.ts",

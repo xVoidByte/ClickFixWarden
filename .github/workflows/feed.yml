@@ -64,6 +64,10 @@ jobs:
           ABUSECH_AUTH_KEY: ${{ secrets.ABUSECH_AUTH_KEY }}
           FEED_SIGNING_KEY: ${{ secrets.FEED_SIGNING_KEY }}
         run: npm run feed:build
+      # Every address is looked up the way the extension does on a page visit, a miss is a builder bug and shows as a warning.
+      - name: Check that the extension finds every address
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm run feed:verify -- dist/site/v1 || echo "::warning::Some addresses in this database would not be found, see the step log"
       - if: steps.secrets.outputs.ready == 'true'
         uses: actions/upload-pages-artifact@v5
         with:
