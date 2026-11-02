@@ -84,6 +84,16 @@ test.describe('lure pages', () => {
     expect(await readClipboard(page)).toContain(SAFE);
   });
 
+  test('borderline command is stopped when the paste steps appear after the copy', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/late-instructions.html');
+    await page.click('#box');
+    await expect(page).toHaveTitle('written');
+    await expect.poll(() => readClipboard(page), { timeout: 10_000 }).toContain(SAFE);
+    await expect.poll(() => overlayShown(page)).toBe(true);
+    await expect.poll(async () => (await lastDetection(sw))?.kind).toBe('clipboard');
+  });
+
   test('borderline command whose download address is reported', async ({ context, sw }) => {
     const page = await context.newPage();
     await page.goto(BASE + '/lures/payload-reported.html');

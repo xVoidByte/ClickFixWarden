@@ -91,15 +91,16 @@ export function startGuard(): void {
     const el = target.closest('button, a, label, [role=button], [role=checkbox], input, [onclick]') ?? target;
     const isCheckbox =
       el.matches('input[type=checkbox], [role=checkbox]') || !!el.querySelector?.('input[type=checkbox], [role=checkbox]');
-    const text = [el.getAttribute('aria-label'), el.getAttribute('title'), (el as HTMLElement).innerText ?? el.textContent]
-      .filter(Boolean)
-      .join(' ')
-      .slice(0, 300);
+    const label = (node: Element) =>
+      [node.getAttribute('aria-label'), node.getAttribute('title'), (node as HTMLElement).innerText ?? node.textContent].filter(Boolean).join(' ').trim();
+    let text = label(el).slice(0, 300);
+    // A fake checkbox is often an empty box, the "not a robot" text sits next to it in the same widget.
+    for (let up = el.parentElement, i = 0; !text && up && up !== document.body && i < 3; up = up.parentElement, i++) text = label(up).slice(0, 300);
     return classifyTriggerText(text, isCheckbox, rules);
   }
 
-  function context(manual: boolean): CommandContext {
-    const p = pageVerdict();
+  function context(manual: boolean, fresh = false): CommandContext {
+    const p = pageVerdict(fresh);
     return { pageScore: p.score, pageReasons: p.reasons, trigger: trigger(), pageReported, web3: web3.mainnet || web3.testnet, manual };
   }
 
@@ -147,13 +148,31 @@ export function startGuard(): void {
     }
   }
 
+  // Borderline commands that were let through and later stopped, so each one is swapped and reported only once.
+  const settled = new Set<string>();
+
   /** A borderline command gets a second look: is its download address in the database? */
-  async function checkTargets(v: Verdict, original: string): Promise<void> {
+  async function checkTargets(v: Verdict, payload: string): Promise<void> {
     if (!v.urls.length) return;
     const hits = await sendMessage<FeedHit[]>({ type: 'lookup-targets', urls: v.urls });
-    if (!Array.isArray(hits) || !hits.length) return;
+    if (!Array.isArray(hits) || !hits.length || settled.has(payload)) return;
+    settled.add(payload);
     await writeSafeClipboard();
     reportVerdict('clipboard', v, hits);
+  }
+
+  /** Lures often show their paste steps only after the copy, so a borderline command is scored again while the page changes. */
+  function recheckLater(payload: string): void {
+    for (const delay of [400, 1000, 2000, 4000, 8000]) {
+      setTimeout(() => {
+        if (settled.has(payload) || !active() || !settings.clipboard) return;
+        const v = evaluateCommand(payload, rules, context(false, true));
+        if (v.level !== 'block') return;
+        settled.add(payload);
+        void writeSafeClipboard();
+        reportVerdict('clipboard', v);
+      }, delay);
+    }
   }
 
   const overlayActions = {
@@ -179,7 +198,10 @@ export function startGuard(): void {
           reportVerdict('clipboard', v);
           return true;
         }
-        if (v.level === 'warn') void checkTargets(v, payload);
+        if (v.level === 'warn') {
+          void checkTargets(v, payload);
+          recheckLater(payload);
+        }
         return false;
       }
       case 'fullscreen':
