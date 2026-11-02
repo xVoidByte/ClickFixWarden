@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "version": 4,
+  "version": 5,
   "minEngine": 1,
   "updated": "2026-10-31",
   "thresholds": {
@@ -96,7 +96,7 @@
       { "id": "page-paste", "group": "paste", "w": 15, "re": "(?:\\bctrl|\\bcontrol|\\bstrg|\\bctl|\\bcmd|\\bcommand|⌘)\\s*(?:\\+|＋)\\s*v\\b" },
       { "id": "page-enter", "group": "enter", "w": 5, "re": "(press|hit|tap|натиснете|натисни|нажмите|нажми|presione|pulse|pulsa|drücken sie|drücke|appuyez sur|premi|pressione|basın|naciśnij|натисніть)\\s+(?:the\\s+)?[\"'“„«]?(?:enter|ввод|ентър|intro|eingabe|entrée|invio)" },
       { "id": "page-run-dialog", "group": "open", "w": 10, "re": "(\\brun (?:dialog|box|window|command)\\b|диалогов(?:ия|ият)? прозорец|окно\\s*[«\"]?выполнить|ventana ejecutar|cuadro de diálogo ejecutar|dialogfeld ausführen|boîte de dialogue exécuter|finestra esegui|caixa executar|çalıştır penceresi|okno uruchom)" },
-      { "id": "page-verify-human", "group": "lure", "w": 15, "re": "(verify (?:that )?you(?:'re| are) (?:a )?human|i(?:'m| am) not a robot|human verification|verification steps|verify (?:your|the) request|verification code copied|awaiting (?:terminal|command) input|verify you are not a (?:robot|bot)|не съм робот|потвърдете, че сте човек|я не робот|подтвердите, что вы (?:не робот|человек)|no soy un robot|verifica que eres humano|ich bin kein roboter|je ne suis pas un robot|non sono un robot|não sou um robô|ben robot değilim|nie jestem robotem|я не робот|підтвердіть, що ви людина)" },
+      { "id": "page-verify-human", "group": "lure", "w": 15, "re": "(verify (?:that )?you(?:'re| are) (?:a )?human|i(?:'m| am) not a robot|human verification|verification steps|verify (?:your|the) request|verification code copied|awaiting (?:terminal|command) input|(?:prove|confirm|show|verify)(?: that)? you(?:'re| are) not a (?:robot|bot)|security verification|verify you are not a (?:robot|bot)|не съм робот|потвърдете, че сте човек|я не робот|подтвердите, что вы (?:не робот|человек)|no soy un robot|verifica que eres humano|ich bin kein roboter|je ne suis pas un robot|non sono un robot|não sou um robô|ben robot değilim|nie jestem robotem|я не робот|підтвердіть, що ви людина)" },
       { "id": "page-fake-update", "group": "lure", "w": 10, "re": "(working on updates|installing updates|do not turn off your (?:computer|pc)|don't turn off your (?:computer|pc)|critical (?:security )?update|не изключвайте компютъра|инсталиране на актуализации|не выключайте компьютер|установка обновлений|no apague (?:el|su) (?:equipo|ordenador)|schalten sie (?:den|ihren) (?:pc|computer) nicht aus|n'éteignez pas (?:votre )?ordinateur|non spegnere il (?:computer|pc))" },
       { "id": "page-fix", "group": "lure", "w": 10, "re": "(how to fix|\\bfix it\\b|copy (?:the )?fix|fix (?:this|the) (?:error|issue|problem)|как да (?:го )?поправ|как исправить|cómo solucionar|so beheben|comment (?:le )?corriger)" }
     ]
@@ -147,7 +147,7 @@
     "noHostLevel": [
       "github.com", "gist.github.com", "raw.githubusercontent.com", "objects.githubusercontent.com", "release-assets.githubusercontent.com", "codeload.github.com", "github.io",
       "gitlab.com", "bitbucket.org", "sourceforge.net", "archive.org",
-      "cdn.jsdelivr.net", "fastly.jsdelivr.net", "gcore.jsdelivr.net", "testingcf.jsdelivr.net", "unpkg.com", "cdnjs.cloudflare.com", "ajax.googleapis.com", "code.jquery.com", "esm.sh", "cdn.skypack.dev", "raw.githack.com", "rawcdn.githack.com", "cdn.statically.io", "cdn.rawgit.com", "registry.npmjs.org",
+      "cdn.jsdelivr.net", "fastly.jsdelivr.net", "gcore.jsdelivr.net", "testingcf.jsdelivr.net", "unpkg.com", "cdnjs.cloudflare.com", "ajax.googleapis.com", "code.jquery.com", "esm.sh", "cdn.skypack.dev", "raw.githack.com", "rawcdn.githack.com", "glcdn.githack.com", "gl.githack.com", "bb.githack.com", "cdn.statically.io", "cdn.rawgit.com", "registry.npmjs.org",
       "google.com", "docs.google.com", "drive.google.com", "drive.usercontent.google.com", "sites.google.com", "storage.googleapis.com", "firebasestorage.googleapis.com", "googleusercontent.com",
       "dropbox.com", "www.dropbox.com", "dl.dropboxusercontent.com", "onedrive.live.com", "1drv.ms", "sharepoint.com", "microsoft.com", "live.com", "office.com", "windows.net", "blob.core.windows.net",
       "discord.com", "cdn.discordapp.com", "media.discordapp.net", "t.me", "telegram.org",

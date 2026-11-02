@@ -103,6 +103,10 @@ describe('page instructions', () => {
     expect(v.ids.has('page-verify-human')).toBe(true);
     expect(v.standalone).toBe(true);
   });
+  it('scores a box that asks to prove you are not a robot', () => {
+    const v = scorePageText('Performing security verification. To better prove you are not a robot, please: 1. Press Windows Key + X combination to open Power User menu. 2. Press I to open Windows PowerShell or Terminal. 3. In the verification window, press Ctrl + V. 4. Press Enter on your keyboard to finish.', rules);
+    expect(v.standalone).toBe(true);
+  });
   it('scores the macOS terminal variant', () => {
     const v = scorePageText('Press Cmd + Space, type Terminal, then press Cmd + V and Enter. Verify you are human', rules);
     expect(v.ids.has('page-mac-terminal')).toBe(true);
