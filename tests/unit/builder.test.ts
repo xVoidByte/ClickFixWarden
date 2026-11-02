@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ageDays, type BuildOptions, type Entries, fromFeodo, fromThreatfox, fromUrlhaus, parseCsvLine, promoteClickFixHosts } from '../../feed-builder/sources';
+import { ageDays, type BuildOptions, type Entries, fromFeodo, fromThreatfox, fromThreatfoxApi, fromUrlhaus, parseCsvLine, promoteClickFixHosts } from '../../feed-builder/sources';
 import { BUNDLED_RULES } from '../../src/engine/rules';
 import { diffEntries, type FeedEntry, refFor, splitEntries } from '../../src/feed/types';
 
@@ -112,6 +112,26 @@ describe('ThreatFox', () => {
     expect(entries.has('h:github.com')).toBe(false);
     expect(entries.has('h:lowconf.example.invalid')).toBe(false);
     expect([...entries.keys()].some((k) => k.includes('0123456789abcdef'))).toBe(false);
+  });
+});
+
+describe('ThreatFox API', () => {
+  const entries: Entries = new Map();
+  const answer = JSON.stringify({
+    query_status: 'ok',
+    data: [
+      { id: '2010001', ioc: 'fresh-lure.example.invalid', ioc_type: 'domain', threat_type: 'payload_delivery', malware_printable: 'ClearFake', malware_alias: null, confidence_level: 100, first_seen: '2026-10-31 11:29:00 UTC', last_seen: null, tags: ['compromised', 'etherhide'] },
+      { id: '2010002', ioc: 'weak.example.invalid', ioc_type: 'domain', threat_type: 'payload_delivery', malware_printable: 'Unknown malware', malware_alias: null, confidence_level: 25, first_seen: '2026-10-31 11:29:00 UTC', last_seen: null, tags: null },
+    ],
+  });
+  const count = fromThreatfoxApi(answer, opts, entries);
+  it('adds reports minutes old with the same rules as the export', () => {
+    expect(count).toBe(1);
+    expect(entries.get('h:fresh-lure.example.invalid')?.[0]).toEqual(['threatfox', 'clickfix', 'ClearFake', '2026-10-31', '2010001', ['compromised', 'etherhide']]);
+    expect(entries.has('h:weak.example.invalid')).toBe(false);
+  });
+  it('ignores an answer that is not ok', () => {
+    expect(fromThreatfoxApi(JSON.stringify({ query_status: 'no_result' }), opts, new Map())).toBe(0);
   });
 });
 

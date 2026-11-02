@@ -8,7 +8,7 @@ import { isUsableRules } from '../src/engine/rules';
 import type { RulesFile } from '../src/engine/types';
 import { FEED_PUBLIC_KEY } from '../src/feed/public-key';
 import { diffEntries, type FeedDelta, type FeedEntry, type FeedPart, type FeedSource, type SourceCount, splitEntries } from '../src/feed/types';
-import { type BuildOptions, type Entries, fromFeodo, fromThreatfox, fromUrlhaus, promoteClickFixHosts, SOURCE_LABELS } from './sources';
+import { type BuildOptions, type Entries, fromFeodo, fromThreatfox, fromThreatfoxApi, fromUrlhaus, promoteClickFixHosts, SOURCE_LABELS } from './sources';
 
 const root = resolve(import.meta.dirname, '..');
 const out = resolve(root, process.env.OUT_DIR ?? 'dist/site');
@@ -83,6 +83,22 @@ counts.urlhaus = fromUrlhaus(new TextDecoder().decode(urlhaus!), opts, entries);
 console.log('Downloading ThreatFox');
 const threatfox = await download(`https://threatfox-api.abuse.ch/v2/files/exports/${authKey}/full.csv.zip`);
 counts.threatfox = fromThreatfox(firstCsvInZip(threatfox!), opts, entries);
+
+// The full export can be hours old, the API adds the reports of the last two days within minutes of their posting.
+console.log('Asking the ThreatFox API for the newest reports');
+try {
+  const res = await fetch('https://threatfox-api.abuse.ch/api/v1/', {
+    method: 'POST',
+    headers: { 'user-agent': UA, 'Auth-Key': authKey!, 'content-type': 'application/json' },
+    body: JSON.stringify({ query: 'get_iocs', days: 2 }),
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const fresh = fromThreatfoxApi(await res.text(), opts, entries);
+  console.log(`ThreatFox API gave ${fresh} recent reports`);
+} catch (e) {
+  console.log(redact(`The ThreatFox API could not be read, publishing the export alone, ${(e as Error).message}`));
+}
 
 console.log('Downloading Feodo Tracker');
 const feodo = await download('https://feodotracker.abuse.ch/downloads/ipblocklist.json');

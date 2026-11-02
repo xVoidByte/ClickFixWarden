@@ -137,20 +137,87 @@ export const THREATFOX_COLUMNS = [
   'reporter',
 ];
 
+/** One ThreatFox report in the shape both the CSV export and the API share. */
+interface ThreatfoxRow {
+  id: string;
+  value: string;
+  type: string;
+  threatType: string;
+  malware: string;
+  alias: string;
+  confidence: number;
+  firstSeen: string;
+  lastSeen: string;
+  tags: string[];
+}
+
 export function fromThreatfox(csv: string, opts: BuildOptions, entries: Entries): number {
+  const rows = readCsv(csv, ['first_seen_utc', 'ioc_id', 'ioc_value', 'ioc_type']).map(
+    (row): ThreatfoxRow => ({
+      id: row.ioc_id,
+      value: row.ioc_value,
+      type: row.ioc_type,
+      threatType: row.threat_type ?? '',
+      malware: row.malware_printable ?? '',
+      alias: row.malware_alias ?? '',
+      confidence: Number(row.confidence_level ?? 0),
+      firstSeen: row.first_seen_utc,
+      lastSeen: row.last_seen_utc ?? '',
+      tags: splitTags(row.tags ?? ''),
+    }),
+  );
+  return addThreatfox(rows, opts, entries);
+}
+
+interface ThreatfoxApiIoc {
+  id: string | number;
+  ioc: string;
+  ioc_type: string;
+  threat_type: string;
+  malware_printable: string | null;
+  malware_alias: string | null;
+  confidence_level: number;
+  first_seen: string | null;
+  last_seen: string | null;
+  tags: string[] | null;
+}
+
+/** The ThreatFox API answer to get_iocs, which holds reports only minutes old while the full export lags behind. */
+export function fromThreatfoxApi(json: string, opts: BuildOptions, entries: Entries): number {
+  const body = JSON.parse(json) as { query_status?: string; data?: ThreatfoxApiIoc[] };
+  if (body.query_status !== 'ok' || !Array.isArray(body.data)) return 0;
+  const utc = (ts: string | null) => (ts ?? '').replace(/\s*UTC$/i, '');
+  const rows = body.data.map(
+    (ioc): ThreatfoxRow => ({
+      id: String(ioc.id),
+      value: ioc.ioc,
+      type: ioc.ioc_type,
+      threatType: ioc.threat_type ?? '',
+      malware: ioc.malware_printable ?? '',
+      alias: ioc.malware_alias ?? '',
+      confidence: Number(ioc.confidence_level ?? 0),
+      firstSeen: utc(ioc.first_seen),
+      lastSeen: utc(ioc.last_seen),
+      tags: (ioc.tags ?? []).filter((t) => t && t.toLowerCase() !== 'none').slice(0, 8),
+    }),
+  );
+  return addThreatfox(rows, opts, entries);
+}
+
+function addThreatfox(rows: ThreatfoxRow[], opts: BuildOptions, entries: Entries): number {
   const noHost = new Set(opts.noHostLevel.map((h) => h.toLowerCase()));
   let count = 0;
-  for (const row of readCsv(csv, ['first_seen_utc', 'ioc_id', 'ioc_value', 'ioc_type'])) {
-    const value = row.ioc_value;
-    const type = row.ioc_type;
+  for (const row of rows) {
+    const value = row.value;
+    const type = row.type;
     if (!value || !type) continue;
-    const confidence = Number(row.confidence_level ?? 0);
-    const seen = row.last_seen_utc || row.first_seen_utc;
-    const tags = splitTags(row.tags ?? '');
-    const malware = row.malware_printable && !/^unknown/i.test(row.malware_printable) ? row.malware_printable : '';
-    const clickfix = isClickFix([...tags, malware, row.malware_alias ?? ''], opts);
-    const category: Category = clickfix ? 'clickfix' : row.threat_type === 'botnet_cc' ? 'c2' : 'malware';
-    const record: FeedRecordTuple = ['threatfox', category, malware, day(row.first_seen_utc), row.ioc_id, tags.slice(0, 3)];
+    const confidence = row.confidence;
+    const seen = row.lastSeen || row.firstSeen;
+    const tags = row.tags;
+    const malware = row.malware && !/^unknown/i.test(row.malware) ? row.malware : '';
+    const clickfix = isClickFix([...tags, malware, row.alias], opts);
+    const category: Category = clickfix ? 'clickfix' : row.threatType === 'botnet_cc' ? 'c2' : 'malware';
+    const record: FeedRecordTuple = ['threatfox', category, malware, day(row.firstSeen), row.id, tags.slice(0, 3)];
     if (type === 'domain') {
       if (confidence < opts.minConfidence || ageDays(seen, opts.now) > opts.maxAgeDays) continue;
       const host = cleanHost(value);
