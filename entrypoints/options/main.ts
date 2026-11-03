@@ -5,11 +5,13 @@ import { lookupKeysForUrl } from '../../src/feed/keys';
 import { type FeedMeta, type FeedRecord, SOURCE_NAMES, type UpdateState } from '../../src/feed/types';
 import type { UpdateResult } from '../../src/feed/update';
 import { DONATE_URL, PRIVACY_URL, PROJECT_URL } from '../../src/shared/constants';
-import { chooseLanguage, LANGUAGES, loadI18nOverride, localizePage, overrideLang, relativeTime, t, uiLocaleCode } from '../../src/shared/i18n';
+import { chooseLanguage, LANGUAGES, loadI18nOverride, localizePage, overrideLang, relativeTime, t, uiLang, uiLocaleCode } from '../../src/shared/i18n';
+import { longDate } from '../../src/ui/explain';
 import type { Detection, Message } from '../../src/shared/messages';
 import { computeEffectiveSettings, type EffectiveSettings, normalizeSite, saveSettings, type Settings } from '../../src/shared/settings';
-import { confirmDialog } from '../../src/ui/graphite';
+import { askDialog, confirmDialog } from '../../src/ui/graphite';
 import { addPageParts } from '../../src/ui/page-parts';
+import { drawUpdateRow, watchUpdate } from '../../src/ui/update-row';
 
 addPageParts();
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -97,12 +99,24 @@ function languageRow(): HTMLElement {
   return make('div', { className: 'row lang' }, label, tip('tipLanguage'), select);
 }
 
+const toggleInputs = new Map<keyof Settings, HTMLInputElement>();
+
+/** Built once, later calls only update the switches, so a switch the visitor flips keeps its slide. */
 function renderToggles(): void {
+  if (toggleInputs.size) {
+    for (const item of TOGGLES) {
+      const input = toggleInputs.get(item.key)!;
+      input.checked = eff.settings[item.key] as boolean;
+      input.disabled = locked(item.key);
+    }
+    return;
+  }
   const box = $('toggles');
   box.replaceChildren(languageRow());
   for (const item of TOGGLES) {
     const input = make('input', { type: 'checkbox', checked: eff.settings[item.key] as boolean, disabled: locked(item.key) });
     input.id = 'set-' + item.key;
+    toggleInputs.set(item.key, input);
     input.addEventListener('change', async () => {
       await saveSettings({ [item.key]: input.checked } as Partial<Settings>);
       await refresh();
@@ -323,10 +337,15 @@ $('exportLog').addEventListener('click', async () => {
   const { log } = (await browser.storage.local.get('log')) as { log?: Detection[] };
   download(`clickfix-warden-log-${stamp()}.json`, log ?? []);
 });
-$('clearLog').addEventListener('click', async () => {
-  if (!confirm(t('logClearConfirm'))) return;
-  await send({ type: 'clear-log' });
-  await renderLog();
+$('clearLog').addEventListener('click', () => {
+  document.body.append(
+    askDialog(document, {
+      title: t('logClearConfirm'),
+      body: t('logClearBody'),
+      confirmLabel: t('logClear'),
+      onConfirm: () => void send({ type: 'clear-log' }).then(renderLog),
+    }),
+  );
 });
 
 // ---- database ----
@@ -341,7 +360,7 @@ async function renderDatabase(): Promise<void> {
   const lines = [
     feedMeta ? t('dbGenerated', [String(feedMeta.count), relativeTime(feedMeta.generated)]) : t('popupFeedNone'),
     feedMeta ? t('dbChecked', relativeTime(feedMeta.checked)) : '',
-    t('popupRulesLine', [String(active.version), active === BUNDLED_RULES ? t('popupRulesBundled') : t('popupRulesUpdated')]),
+    t('popupRulesLine', [longDate(active.updated, uiLang()), active === BUNDLED_RULES ? t('popupRulesBundled') : t('popupRulesUpdated')]),
     updateState?.lastError ? t('dbError', updateState.lastError) : '',
   ].filter(Boolean);
   status.replaceChildren(...lines.map((l) => make('div', { textContent: l })));
@@ -396,6 +415,7 @@ void (async () => {
   await refresh();
   await renderLog();
   await renderDatabase();
+  watchUpdate((s) => drawUpdateRow($('appUpdate'), s));
   await checkHostAccess();
   if (await browser.permissions.contains({ permissions: ['history'] })) $('dropHistory').hidden = false;
   if (await browser.permissions.contains({ permissions: ['management'] })) $('dropManagement').hidden = false;

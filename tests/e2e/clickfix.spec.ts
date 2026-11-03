@@ -91,6 +91,38 @@ test.describe('lure pages', () => {
     await expect.poll(async () => (await lastDetection(sw))?.kind).toBe('page-instructions');
   });
 
+  test('a wrapper that swaps in a command under harmless text is still checked', async ({ context }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/wrapper-swaps-text.html');
+    await page.click('#cb');
+    await expect(page).toHaveTitle('written');
+    expect(await readClipboard(page)).toContain(SAFE);
+  });
+
+  test('a fake check made of a plain div still counts as a lure box', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/div-checkbox.html');
+    await expect.poll(() => overlayShown(page), { timeout: 10_000 }).toBe(true);
+    await expect.poll(async () => (await lastDetection(sw))?.kind).toBe('page-instructions');
+  });
+
+  test('a later recheck never replaces something the visitor copied in the meantime', async ({ context }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/lures/late-instructions.html');
+    await page.click('#box');
+    await expect(page).toHaveTitle('written');
+    // The visitor copies their own text before the rechecks run.
+    await page.evaluate(() => {
+      const range = document.createRange();
+      range.selectNodeContents(document.querySelector('h1')!);
+      getSelection()!.removeAllRanges();
+      getSelection()!.addRange(range);
+    });
+    await page.keyboard.press('Control+C');
+    await page.waitForTimeout(9000);
+    expect(await readClipboard(page)).toContain('example-shop.invalid');
+  });
+
   test('a writeText wrapped later by someone else still reaches our check first', async ({ context, sw }) => {
     const page = await context.newPage();
     await page.goto(BASE + '/lures/wrapped-by-another.html');
@@ -225,6 +257,14 @@ test.describe('normal pages stay untouched', () => {
   test('news article that quotes a lure next to share buttons raises nothing', async ({ context, sw }) => {
     const page = await context.newPage();
     await page.goto(BASE + '/benign/news-quotes-lure.html');
+    await page.waitForTimeout(4000);
+    expect(await overlayShown(page)).toBe(false);
+    expect(await detectionCount(sw)).toBe(0);
+  });
+
+  test('blog post that quotes a lure next to a checklist and share icons raises nothing', async ({ context, sw }) => {
+    const page = await context.newPage();
+    await page.goto(BASE + '/benign/blog-quotes-lure.html');
     await page.waitForTimeout(4000);
     expect(await overlayShown(page)).toBe(false);
     expect(await detectionCount(sw)).toBe(0);
@@ -371,6 +411,40 @@ test.describe('extension pages', () => {
     await page.bringToFront();
     await page.selectOption('#language', '');
     await expect(page.locator('html')).toHaveAttribute('lang', /^en/);
+  });
+
+  test('clearing the log asks in a styled dialog, Cancel keeps it and the red button clears it', async ({ context, sw, extId }) => {
+    await sw.evaluate(async () => {
+      await chrome.storage.local.set({ log: [{ id: '1', time: new Date().toISOString(), kind: 'clipboard', action: 'blocked', url: 'https://a.test/', host: 'a.test', reasons: [], what: 'a test entry' }] });
+    });
+    const page = await context.newPage();
+    page.on('dialog', () => {
+      throw new Error('the browser confirm box must not appear');
+    });
+    await page.goto(`chrome-extension://${extId}/options.html`);
+    await page.click('#clearLog');
+    await expect(page.locator('.g-card')).toContainText('This cannot be undone.');
+    await page.click('.g-card .g-btn.primary');
+    await expect(page.locator('.g-card')).toHaveCount(0);
+    expect(await detectionCount(sw)).toBe(1);
+    await page.click('#clearLog');
+    await page.click('.g-card .g-btn.danger');
+    await expect.poll(() => detectionCount(sw)).toBe(0);
+  });
+
+  test('a picked language copied by an older version is renewed after an update', async ({ context, sw, extId }) => {
+    // The copy an older version left behind, with a sentence that no longer matches the code.
+    await sw.evaluate(async () => {
+      await chrome.storage.local.set({ i18nOverride: { lang: 'en', messages: { popupUpdated: 'Updated $1, rules version $2', navProtection: 'Old text' }, version: '0.0.9' } });
+    });
+    const popup = await context.newPage();
+    await popup.goto(`chrome-extension://${extId}/popup.html`);
+    await expect(popup.locator('#stats')).toContainText('Updated');
+    await expect(popup.locator('#stats')).not.toContainText('$2');
+    await expect(popup.locator('#stats')).not.toContainText('rules version');
+    const stored = await sw.evaluate(async () => (await chrome.storage.local.get('i18nOverride')).i18nOverride as { version: string; messages: Record<string, string> });
+    expect(stored.version).toBe(await sw.evaluate(() => (chrome as unknown as { runtime: { getManifest(): { version: string } } }).runtime.getManifest().version));
+    expect(stored.messages.navProtection).toBe('Protection');
   });
 
   test('popup renders', async ({ context, extId }) => {

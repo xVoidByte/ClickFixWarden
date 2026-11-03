@@ -26,7 +26,8 @@ a:hover { color: #FFFFFF; }
 h1, h2, h3 { margin: 0; line-height: 1.2; }
 strong { color: #FFFFFF; font-weight: 700; }
 button { font: inherit; }
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #8AB4F8; outline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 1.5px solid rgba(243, 243, 244, 0.7); outline-offset: 2px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: #8A8D96; }
 
 input[type='text'], select, textarea {
   font: inherit;
@@ -59,31 +60,32 @@ select {
 /* on/off switch, white when on like the Graphite boards */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex: none; }
 .switch input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
-.switch .track { position: absolute; inset: 0; border-radius: 12px; background: var(--btnline); }
-.switch .knob { position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); }
+.switch .track { position: absolute; inset: 0; border-radius: 12px; background: var(--btnline); transition: background-color 0.18s ease; }
+.switch .knob { position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: inset-inline-start 0.18s ease, background-color 0.18s ease; }
 .switch input:checked ~ .track { background: var(--text); }
 .switch input:checked ~ .knob { inset-inline-start: 23px; background: var(--bg); }
 .switch input:disabled { cursor: default; }
 .switch input:disabled ~ .track { opacity: 0.5; }
-.switch input:focus-visible ~ .track { outline: 3px solid #8AB4F8; outline-offset: 2px; }
+.switch input:focus-visible ~ .track { outline: 1.5px solid rgba(243, 243, 244, 0.7); outline-offset: 2px; }
 
-/* help icon, a drawn info mark in a soft circle, the tooltip shows on hover or focus */
+/* help icon, a dark i on a solid grey dot that lightens on hover, the tooltip shows on hover or focus */
 .tip {
   position: relative;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--raised);
-  border: 1px solid var(--line2);
-  color: var(--muted);
+  background: #3A3C42;
+  border: none;
+  color: #111214;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: none;
   cursor: help;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .tip svg { width: 14px; height: 14px; }
-.tip:hover, .tip:focus-visible { background: var(--line2); border-color: var(--btnline); color: #FFFFFF; }
+.tip:hover, .tip:focus-visible { background: #C4C6CC; color: #111214; }
 .tip::after {
   content: attr(data-tip);
   position: absolute;
@@ -128,3 +130,4 @@ select {
 .rows { border-top: 1px solid var(--line); }
 .rows > .row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
 .rows > .row > .grow { flex: 1; min-width: 0; }
+.upd-version { font-weight: 600; color: var(--text); }

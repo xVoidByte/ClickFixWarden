@@ -22,7 +22,7 @@ ${PARTS_CSS}
 .banner .text { flex: 1 1 320px; min-width: 0; font-size: 14px; line-height: 1.5; color: #C4C6CC; }
 .banner .text strong { color: #FFFFFF; font-weight: 700; }
 .close { background: none; border: none; padding: 8px; cursor: pointer; border-radius: 8px; }
-.close:focus-visible { outline: 3px solid #8AB4F8; }
+.close:focus-visible { outline: 1.5px solid rgba(243, 243, 244, 0.7); outline-offset: 2px; }
 `;
 
 let hostEl: HTMLElement | null = null;
