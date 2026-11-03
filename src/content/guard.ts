@@ -25,6 +25,8 @@ export function startGuard(): void {
   const web3 = { mainnet: false, testnet: false };
   let lastPointer: { el: Element | null; time: number } = { el: null, time: 0 };
   let copyMark = 0;
+  // Counts every write to the clipboard this page can see, a later recheck only replaces what is still the last write.
+  let clipboardSeq = 0;
   let pageCache: { time: number; v: PageVerdict } | null = null;
   // The instruction box found in the page, it also raises the score of any command copied afterwards.
   let lureBox: PageVerdict | null = null;
@@ -101,10 +103,10 @@ export function startGuard(): void {
     return classifyTriggerText(text, isCheckbox, rules);
   }
 
-  function context(manual: boolean, fresh = false): CommandContext {
+  function context(manual: boolean, fresh = false, trig: TriggerKind = trigger()): CommandContext {
     let p = pageVerdict(fresh);
     if (lureBox && lureBox.score > p.score) p = lureBox;
-    return { pageScore: p.score, pageReasons: p.reasons, trigger: trigger(), pageReported, web3: web3.mainnet || web3.testnet, manual };
+    return { pageScore: p.score, pageReasons: p.reasons, trigger: trig, pageReported, web3: web3.mainnet || web3.testnet, manual };
   }
 
   // ---- reporting ----
@@ -155,22 +157,23 @@ export function startGuard(): void {
   const settled = new Set<string>();
 
   /** A borderline command gets a second look: is its download address in the database? */
-  async function checkTargets(v: Verdict, payload: string): Promise<void> {
+  async function checkTargets(v: Verdict, payload: string, seq: number): Promise<void> {
     if (!v.urls.length) return;
     const hits = await sendMessage<FeedHit[]>({ type: 'lookup-targets', urls: v.urls });
-    if (!Array.isArray(hits) || !hits.length || settled.has(payload)) return;
+    if (!Array.isArray(hits) || !hits.length || settled.has(payload) || seq !== clipboardSeq) return;
     settled.add(payload);
     await writeSafeClipboard();
     reportVerdict('clipboard', v, hits);
   }
 
   /** Lures often show their paste steps only after the copy, so a borderline command is scored again while the page changes. */
-  function recheckLater(payload: string): void {
+  function recheckLater(payload: string, seq: number, trig: TriggerKind): void {
     for (const delay of [400, 1000, 2000, 4000, 8000]) {
       setTimeout(() => {
-        if (settled.has(payload) || !active() || !settings.clipboard) return;
+        // Something else was copied since, the visitor's own copy must never be replaced.
+        if (seq !== clipboardSeq || settled.has(payload) || !active() || !settings.clipboard) return;
         scanPage();
-        const v = evaluateCommand(payload, rules, context(false, true));
+        const v = evaluateCommand(payload, rules, context(false, true, trig));
         if (v.level !== 'block') return;
         settled.add(payload);
         void writeSafeClipboard();
@@ -197,14 +200,16 @@ export function startGuard(): void {
       case 'set-data':
       case 'exec-copy': {
         if (!settings.clipboard) return false;
-        const v = evaluateCommand(payload, rules, context(false));
+        const seq = ++clipboardSeq;
+        const trig = trigger();
+        const v = evaluateCommand(payload, rules, context(false, false, trig));
         if (v.level === 'block') {
           reportVerdict('clipboard', v);
           return true;
         }
         if (v.level === 'warn') {
-          void checkTargets(v, payload);
-          recheckLater(payload);
+          void checkTargets(v, payload, seq);
+          recheckLater(payload, seq, trig);
         }
         return false;
       }
@@ -319,7 +324,9 @@ export function startGuard(): void {
   }
 
   const onCopy = (e: ClipboardEvent) => {
-    if (copyMark > 0 || !active() || !settings.clipboard) return;
+    if (copyMark > 0) return;
+    clipboardSeq++;
+    if (!active() || !settings.clipboard) return;
     const text = selectedText();
     if (text.trim().length < 6) return;
     const v = evaluateCommand(text, rules, context(true));
@@ -374,15 +381,20 @@ export function startGuard(): void {
   let scanTimer: number | undefined;
   const observer = new MutationObserver(() => scheduleScan());
 
-  /** Throttled, not debounced, so a slider that changes every moment cannot keep the scan from running. */
+  /**
+   * Throttled, not debounced, so a slider that changes every moment cannot keep the scan from running.
+   * Lures appear within seconds of a load, so scans space out over time and pause while the tab is hidden.
+   */
   function scheduleScan(): void {
-    if (lureBox || scanTimer !== undefined) return;
-    const wait = Date.now() - watchStart < 30_000 ? 1000 : 3000;
+    if (lureBox || scanTimer !== undefined || document.hidden) return;
+    const age = Date.now() - watchStart;
+    const wait = age < 30_000 ? 1000 : age < 300_000 ? 5000 : 15_000;
     scanTimer = window.setTimeout(() => {
       scanTimer = undefined;
       scanPage();
     }, wait);
   }
+  document.addEventListener('visibilitychange', () => scheduleScan());
 
   function scanPage(): void {
     if (!active() || lureBox) return;
@@ -414,13 +426,13 @@ export function startGuard(): void {
 
   // ---- reputation, top frame only ----
   if (isTop) {
-    const showReputation = async () => {
+    const showReputation = async (first: boolean) => {
       const status = await sendMessage<PageStatus>({ type: 'page-status', url: location.href });
       if (!status?.hits?.length) return;
       pageReported = true;
       if (!settings.reputation || !settings.enabled || status.trusted) return;
-      // The warning page is on its way, stop the site from loading any further in the meantime.
-      if (status.blocked) {
+      // The warning page is on its way, stop the site from loading any further, only on the first check and never on a later update.
+      if (status.blocked && first) {
         window.stop();
         return;
       }
@@ -432,10 +444,10 @@ export function startGuard(): void {
         reasons: status.hits.flatMap((h) => h.records.map((r) => `${r.source}:${r.category}`)),
       });
     };
-    void load().then(showReputation);
+    void load().then(() => showReputation(true));
     try {
       browser.runtime.onMessage.addListener((msg: TabMessage) => {
-        if (msg.type === 'reputation-update') void showReputation();
+        if (msg.type === 'reputation-update') void showReputation(false);
         if (msg.type === 'show-alert') showAlert(msg.alert, overlayActions, settings.customWarning);
       });
     } catch {

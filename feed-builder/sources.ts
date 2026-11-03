@@ -275,7 +275,20 @@ export function fromFeodo(json: string, opts: BuildOptions, entries: Entries): n
   return count;
 }
 
-/** A host that served a reported ClickFix address is listed as a whole, except shared hosting where only the exact address counts. */
+// On these platforms every subdomain belongs to one customer, so a lure there is listed as a whole like any other host.
+const TENANT_PLATFORMS = new Set(['pages.dev', 'workers.dev', 'vercel.app', 'netlify.app', 'github.io', 'web.app', 'firebaseapp.com', 'glitch.me', 'r2.dev', 'blob.core.windows.net', 'cloudfront.net']);
+
+/** A host from the shared list, or a subdomain of one such as www.google.com or dl.dropbox.com, but not a customer's own subdomain. */
+function isSharedHost(host: string, noHost: Set<string>): boolean {
+  if (noHost.has(host)) return true;
+  for (let h = host.slice(host.indexOf('.') + 1); h.includes('.'); h = h.slice(h.indexOf('.') + 1)) {
+    if (TENANT_PLATFORMS.has(h)) return false;
+    if (noHost.has(h)) return true;
+  }
+  return false;
+}
+
+/** A host that served a reported ClickFix address is listed as a whole, except shared hosting and bare IPs where only the exact address counts. */
 export function promoteClickFixHosts(opts: BuildOptions, entries: Entries): number {
   const noHost = new Set(opts.noHostLevel.map((h) => h.toLowerCase()));
   const byHost = new Map<string, FeedRecordTuple[]>();
@@ -284,14 +297,15 @@ export function promoteClickFixHosts(opts: BuildOptions, entries: Entries): numb
     const clickfix = records.filter((r) => r[1] === 'clickfix');
     if (!clickfix.length) continue;
     const host = cleanHost(key.slice(2).split('/')[0].replace(/:\d+$/, ''));
-    if (!host || noHost.has(host)) continue;
+    // A server IP can be shared by many sites, and a shared host such as www.google.com or dl.dropbox.com hides behind a parent domain.
+    if (!host || isIp(host) || isSharedHost(host, noHost)) continue;
     const list = byHost.get(host) ?? [];
     list.push(...clickfix);
     byHost.set(host, list);
   }
   let count = 0;
   for (const [host, records] of byHost) {
-    const key = isIp(host) ? ipKey(host) : hostKey(host);
+    const key = hostKey(host);
     // The newest reports are enough to explain the warning, three keep the file small.
     for (const record of [...records].sort((a, b) => (a[3] < b[3] ? 1 : -1)).slice(0, 3)) add(entries, key, record);
     count++;

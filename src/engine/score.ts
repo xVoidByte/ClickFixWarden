@@ -4,8 +4,11 @@ import type { CommandContext, Reason, RulesFile, Verdict } from './types';
 
 const URL_RE = /\b(?:https?|hxxps?):\/\/[^\s"'`|;)<>]+/gi;
 const UNC_RE = /\\\\([a-z0-9.-]+)(?:@ssl)?(?:@\d+)?\\/gi;
-// "irm host.tld/path | iex" works without a scheme, PowerShell and curl add one themselves.
-const BARE_RE = /\b(?:irm|iwr|invoke-restmethod|invoke-webrequest|curl|wget)(?:\s+-{1,2}[a-z]+)*\s+["']?([a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?::\d+)?\/[^\s"'`|;)<>]*)/gi;
+// "irm host.tld/path | iex" works without a scheme, PowerShell and curl add one themselves, so every host after a download command counts.
+const FETCH_RE = /\b(?:irm|iwr|invoke-restmethod|invoke-webrequest|curl(?:\.exe)?|wget(?:\.exe)?)\b([^|;\n]{0,600})/gi;
+const HOST_RE = /(?<![\w@./-])([a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.[a-z]{2,24}(?::\d+)?)(\/[^\s"'`|;)<>]*)?(?![\w.-])/gi;
+const OUTPUT_FLAG_RE = /(?:^|\s)(?:-OutFile|--output-document|--output|-o|>)\s*["']?[^\s"']+/gi;
+const FILE_EXT = new Set(['sh', 'py', 'zip', 'exe', 'cmd', 'bat', 'ps', 'msi', 'dll', 'js', 'vbs', 'hta', 'txt', 'log', 'tmp', 'bin', 'dat', 'json', 'xml', 'jar', 'rar', 'gz', 'tar', 'deb', 'rpm', 'pkg', 'dmg', 'app', 'lnk', 'scr', 'iso', 'img']);
 
 /** Scores text that a page is about to put in the clipboard. */
 export function evaluateCommand(text: string, rules: RulesFile, ctx: CommandContext = {}): Verdict {
@@ -90,7 +93,17 @@ export function extractTargets(text: string, decoded: string[] = []): string[] {
       found.add(url);
       if (found.size >= 20) return [...found];
     }
-    for (const m of source.matchAll(BARE_RE)) found.add(`https://${m[1].replace(/[.,]+$/, '')}`);
+    for (const call of source.matchAll(FETCH_RE)) {
+      // Full addresses are already counted, and the file a command saves to is not an address.
+      const rest = call[1].replace(/(?:https?|hxxps?):\/\/\S+/gi, ' ').replace(OUTPUT_FLAG_RE, ' ');
+      for (const m of rest.matchAll(HOST_RE)) {
+        const tld = m[1].slice(m[1].lastIndexOf('.') + 1).toLowerCase();
+        // "install.sh" or "a.exe" with no path is a file name, a real host on such a domain almost always comes with one.
+        if (!m[2] && m[1].split('.').length === 2 && FILE_EXT.has(tld)) continue;
+        found.add(`https://${m[1]}${(m[2] ?? '/').replace(/[.,]+$/, '')}`);
+        if (found.size >= 20) return [...found];
+      }
+    }
     for (const m of source.matchAll(UNC_RE)) found.add(`http://${m[1].toLowerCase()}/`);
   }
   return [...found];

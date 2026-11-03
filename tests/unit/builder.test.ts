@@ -82,8 +82,36 @@ describe('ClickFix hosts', () => {
   const promoted = promoteClickFixHosts(opts, entries);
   it('lists the whole host of a reported ClickFix address', () => {
     expect(entries.get('h:cdn.example.invalid')?.[0]).toEqual(['urlhaus', 'clickfix', '', '2026-10-30', '9001', ['ClickFix', 'ps1']]);
-    expect(entries.get('i:192.0.2.70')?.[0][1]).toBe('clickfix');
-    expect(promoted).toBe(2);
+    expect(entries.has('i:192.0.2.70')).toBe(false);
+    expect(entries.has('u:192.0.2.70/p.ps1')).toBe(true);
+    expect(promoted).toBe(1);
+  });
+  it('never lists a subdomain of a shared host as a whole', () => {
+    const shared: Entries = new Map();
+    fromUrlhaus(
+      `# id,dateadded,url,url_status,last_online,threat,tags,urlhaus_link,reporter
+"9301","2026-10-30 08:00:00","https://www.google.com/url?q=x","online","","malware_download","ClickFix","",""
+"9302","2026-10-30 08:00:00","https://dl.dropbox.com/s/x/a.ps1","online","","malware_download","ClickFix","",""
+`,
+      opts,
+      shared,
+    );
+    expect(promoteClickFixHosts(opts, shared)).toBe(0);
+    expect(shared.has('h:www.google.com')).toBe(false);
+    expect(shared.has('h:dl.dropbox.com')).toBe(false);
+  });
+  it('still lists a customer subdomain on a hosting platform as a whole', () => {
+    const tenant: Entries = new Map();
+    fromUrlhaus(
+      `# id,dateadded,url,url_status,last_online,threat,tags,urlhaus_link,reporter
+"9401","2026-10-30 08:00:00","https://verify-human-x.pages.dev/c.ps1","online","","malware_download","ClickFix","",""
+`,
+      opts,
+      tenant,
+    );
+    expect(promoteClickFixHosts(opts, tenant)).toBe(1);
+    expect(tenant.has('h:verify-human-x.pages.dev')).toBe(true);
+    expect(tenant.has('h:pages.dev')).toBe(false);
   });
   it('leaves malware downloads and shared CDNs at the exact address', () => {
     expect(entries.has('i:192.0.2.10')).toBe(false);

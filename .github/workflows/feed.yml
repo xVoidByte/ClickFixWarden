@@ -87,11 +87,15 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v5
 
-  # Waits for the next :07 and starts the following run itself, a push never starts a chain and a second chain stops at once.
+  # Waits for the next :07 and starts the following run itself, a push never starts a chain.
+  # Only the newest waiting job survives, so overlapping runs always leave exactly one chain.
   next:
     needs: build
     if: always() && github.event_name != 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    concurrency:
+      group: feed-next
+      cancel-in-progress: true
     permissions:
       actions: write
     steps:
@@ -99,13 +103,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          RUN_ID: ${{ github.run_id }}
         run: |
-          others=$(gh api "repos/$REPO/actions/workflows/feed.yml/runs?per_page=30" --jq "[.workflow_runs[] | select(.id != $RUN_ID and .event != \"push\" and (.status == \"queued\" or .status == \"in_progress\" or .status == \"waiting\" or .status == \"pending\"))] | length")
-          if [ "$others" != "0" ]; then
-            echo "::notice::Another scheduled run is already active, this one does not start a chain"
-            exit 0
-          fi
           now=$(date +%s)
           next=$(( now / 3600 * 3600 + 420 ))
           if [ "$next" -le "$now" ]; then next=$(( next + 3600 )); fi

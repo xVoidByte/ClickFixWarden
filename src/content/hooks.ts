@@ -48,17 +48,39 @@ export function installHooks(root: Realm): void {
 
   type Handler = (target: AnyFn, thisArg: unknown, args: unknown[]) => unknown;
   // Clipboard hooks that must stay the outermost wrapper, another extension or the page may wrap them later without calling through.
-  const guarded: { obj: object; name: string; handler: Handler; proxy: AnyFn }[] = [];
+  const guarded: { obj: object; name: string; handler: Handler }[] = [];
+  const checkedItems = new WeakSet<object>();
   const ours = new WeakSet<object>();
+
+  /**
+   * When a later wrapper calls through to an older copy of the same hook with the same arguments, that inner copy passes
+   * the call on, but a wrapper that swapped the text in between is checked again.
+   */
+  function once(handler: Handler): Handler {
+    const outer: unknown[][] = [];
+    return (target, thisArg, args) => {
+      const seen = outer[outer.length - 1];
+      // execCommand copies the current selection, which a wrapper in between can change, so only text arguments count as the same call.
+      const sameText = seen && seen.length === args.length && seen.every((a, i) => a === args[i]) && args.some((a) => typeof a === 'string' && !/^(copy|cut)$/i.test(a));
+      if (sameText) return apply(target, thisArg, args);
+      outer.push(args.slice());
+      try {
+        return handler(target, thisArg, args);
+      } finally {
+        outer.pop();
+      }
+    };
+  }
 
   function hook(obj: object | undefined, name: string, handler: Handler, guard = false): void {
     if (!obj) return;
     const desc = getDescriptor(obj, name);
     if (!desc || typeof desc.value !== 'function') return;
-    const proxy = new ProxyC(desc.value as AnyFn, { apply: handler });
+    const shared = guard ? once(handler) : handler;
+    const proxy = new ProxyC(desc.value as AnyFn, { apply: shared });
     ours.add(proxy);
     defineProperty(obj, name, { ...desc, value: proxy });
-    if (guard) guarded.push({ obj, name, handler, proxy });
+    if (guard) guarded.push({ obj, name, handler: shared });
   }
 
   /** Wraps again on top of anything added after us, so a click or key press always reaches our check first. */
@@ -70,7 +92,6 @@ export function installHooks(root: Realm): void {
         const proxy = new ProxyC(desc.value as AnyFn, { apply: g.handler });
         ours.add(proxy);
         defineProperty(g.obj, g.name, { ...desc, value: proxy });
-        g.proxy = proxy;
       } catch {
         // a frozen property stays as it is
       }
@@ -131,6 +152,8 @@ export function installHooks(root: Realm): void {
     // navigator.clipboard.write([new ClipboardItem({...})])
     hook(w.Clipboard?.prototype, 'write', (target, thisArg, args) => {
       const items = args[0] as ClipboardItem[] | undefined;
+      // The check runs after an await, so an inner copy of this hook recognises the item list it already checked.
+      if (items && typeof items === 'object' && checkedItems.delete(items)) return apply(target, thisArg, args);
       return (async () => {
         let text = '';
         try {
@@ -148,9 +171,11 @@ export function installHooks(root: Realm): void {
           // unreadable item, let the browser handle it
         }
         if (text && check('clipboard-write', text)) {
-          const item = new w.ClipboardItem({ 'text/plain': new w.Blob([safeText()], { type: 'text/plain' }) });
-          return apply(target, thisArg, [[item]]);
+          const safe = [new w.ClipboardItem({ 'text/plain': new w.Blob([safeText()], { type: 'text/plain' }) })];
+          checkedItems.add(safe);
+          return apply(target, thisArg, [safe]);
         }
+        if (items && typeof items === 'object') checkedItems.add(items);
         return apply(target, thisArg, args);
       })();
     }, true);
