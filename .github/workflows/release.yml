@@ -45,6 +45,11 @@ jobs:
           EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
           EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
         run: |
+          # The key may be pasted straight from the JSON file with \n in it, the signer needs real line breaks.
+          if [ -n "$CHROME_SERVICE_ACCOUNT_PRIVATE_KEY" ]; then
+            CHROME_SERVICE_ACCOUNT_PRIVATE_KEY="$(node -e 'process.stdout.write(process.env.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n").trim() + "\n")')"
+            export CHROME_SERVICE_ACCOUNT_PRIVATE_KEY
+          fi
           v=$(node -p "require('./package.json').version")
           args=()
           if [ -n "$CHROME_PUBLISHER_ID" ] && [ -n "$CHROME_SERVICE_ACCOUNT_PRIVATE_KEY" ]; then args+=(--chrome-zip ".output/clickfix-warden-$v-chrome.zip"); fi
