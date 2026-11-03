@@ -30,24 +30,25 @@ jobs:
             .output/*.zip
             .output/SHA256SUMS.txt
           generate_release_notes: true
-      # The same zips go to every store whose keys are saved as secrets, the first upload to a store is always by hand.
+      # The same zips go to every store whose keys are saved as secrets, the store IDs are public and live here.
       - name: Send the packages to the stores
         env:
-          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
-          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
-          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
-          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          FIREFOX_EXTENSION_ID: ${{ secrets.FIREFOX_EXTENSION_ID }}
+          CHROME_API_VERSION: v2
+          CHROME_EXTENSION_ID: ecikmhaedgodiknoopiofaaooadmmpgd
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          FIREFOX_EXTENSION_ID: clickfix-warden@xvoidbyte
           FIREFOX_JWT_ISSUER: ${{ secrets.FIREFOX_JWT_ISSUER }}
           FIREFOX_JWT_SECRET: ${{ secrets.FIREFOX_JWT_SECRET }}
-          EDGE_PRODUCT_ID: ${{ secrets.EDGE_PRODUCT_ID }}
+          EDGE_PRODUCT_ID: 82669584-46e6-46a2-a262-3af7e71b7509
           EDGE_CLIENT_ID: ${{ secrets.EDGE_CLIENT_ID }}
           EDGE_API_KEY: ${{ secrets.EDGE_API_KEY }}
         run: |
           v=$(node -p "require('./package.json').version")
           args=()
-          if [ -n "$CHROME_EXTENSION_ID" ] && [ -n "$CHROME_REFRESH_TOKEN" ]; then args+=(--chrome-zip ".output/clickfix-warden-$v-chrome.zip"); fi
-          if [ -n "$FIREFOX_EXTENSION_ID" ] && [ -n "$FIREFOX_JWT_SECRET" ]; then args+=(--firefox-zip ".output/clickfix-warden-$v-firefox.zip" --firefox-sources-zip ".output/clickfix-warden-$v-sources.zip"); fi
-          if [ -n "$EDGE_PRODUCT_ID" ] && [ -n "$EDGE_API_KEY" ]; then args+=(--edge-zip ".output/clickfix-warden-$v-edge.zip"); fi
+          if [ -n "$CHROME_PUBLISHER_ID" ] && [ -n "$CHROME_SERVICE_ACCOUNT_PRIVATE_KEY" ]; then args+=(--chrome-zip ".output/clickfix-warden-$v-chrome.zip"); fi
+          if [ -n "$FIREFOX_JWT_ISSUER" ] && [ -n "$FIREFOX_JWT_SECRET" ]; then args+=(--firefox-zip ".output/clickfix-warden-$v-firefox.zip" --firefox-sources-zip ".output/clickfix-warden-$v-sources.zip"); fi
+          if [ -n "$EDGE_CLIENT_ID" ] && [ -n "$EDGE_API_KEY" ]; then args+=(--edge-zip ".output/clickfix-warden-$v-edge.zip"); fi
           if [ ${#args[@]} -eq 0 ]; then echo "::notice::No store keys are saved yet, upload the zips from this release by hand."; exit 0; fi
           npx wxt submit "${args[@]}"
