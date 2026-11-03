@@ -327,7 +327,7 @@
     "message": "Stop trusting this site"
   },
   "popupUpdated": {
-    "message": "Updated $1, rules version $2"
+    "message": "Updated $1"
   },
   "popupFeedNone": {
     "message": "Database not downloaded yet"
@@ -351,7 +351,7 @@
     "message": "Updating"
   },
   "popupRulesLine": {
-    "message": "Detection rules version $1, $2"
+    "message": "Detection rules from $1, $2"
   },
   "popupRulesBundled": {
     "message": "built in"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Browser default"
+  },
+  "updTitle": {
+    "message": "Updates"
+  },
+  "updVersion": {
+    "message": "Version $1"
+  },
+  "updCurrent": {
+    "message": "You have the latest version."
+  },
+  "updAuto": {
+    "message": "Updates install by themselves from the add-on store."
+  },
+  "updChecking": {
+    "message": "Checking for updates"
+  },
+  "updDownloading": {
+    "message": "Version $1 was found and is downloading."
+  },
+  "updReady": {
+    "message": "Version $1 is ready to install."
+  },
+  "updThrottled": {
+    "message": "The store was asked a moment ago, try again in a few minutes."
+  },
+  "updError": {
+    "message": "The store could not be reached, try again later."
+  },
+  "updCheck": {
+    "message": "Check for updates"
+  },
+  "updApply": {
+    "message": "Update now"
+  },
+  "tipUpdCheck": {
+    "message": "Asks the add-on store for a newer version now instead of waiting for the browser's own check"
+  },
+  "tipUpdApply": {
+    "message": "Restarts ClickFix Warden to finish the update, this takes a second"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, version $1 is ready, open to install it"
+  },
+  "btnCancel": {
+    "message": "Cancel"
+  },
+  "logClearBody": {
+    "message": "This cannot be undone."
   }
 }

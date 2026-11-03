@@ -1,9 +1,11 @@
 import { browser, type Browser } from 'wxt/browser';
 import { lookupKeys } from '../src/feed/db';
+import { APPLY_ALARM, appUpdateStatus, applyWhenSafe, checkNow, installNow, onDownloaded, tidyAfterStart } from '../src/background/app-update';
 import { ipKey, lookupKeysForUrl } from '../src/feed/keys';
 import type { FeedHit } from '../src/feed/types';
 import { updateAll } from '../src/feed/update';
 import { FEED_REFRESH_MINUTES } from '../src/shared/constants';
+import { renewI18nOverride } from '../src/shared/i18n';
 import { addDetection } from '../src/shared/log';
 import type { Message, PageStatus, TabMessage } from '../src/shared/messages';
 import { computeEffectiveSettings, type EffectiveSettings, isTrusted, normalizeSite, saveSettings } from '../src/shared/settings';
@@ -12,6 +14,8 @@ interface TabState {
   url: string;
   hits: FeedHit[];
   ipHits: FeedHit[];
+  /** The tab could not be sent to the warning page, so the page must keep loading and show its warning bar. */
+  redirectFailed?: boolean;
 }
 
 const ALARM = 'feed-update';
@@ -87,9 +91,19 @@ async function checkNavigation(tabId: number, url: string): Promise<void> {
   const host = hostOf(url);
   const hits = isTrusted(host, settings) ? [] : await lookupKeys(lookupKeysForUrl(url));
   const ipHits = previous?.url === url ? previous.ipHits : [];
-  await writeTab(tabId, { url, hits, ipHits });
+  // A redirect that failed once for this address is not tried again, so a reload shows the page with its warning bar instead.
+  const failedBefore = previous?.url === url && !!previous.redirectFailed;
+  await writeTab(tabId, { url, hits, ipHits, ...(failedBefore ? { redirectFailed: true } : {}) });
   await setBadge(tabId, hits.length + ipHits.length > 0);
-  if (hits.length && settings.blockPage && !(await isBypassed(host))) {
+  if (hits.length && settings.blockPage && !failedBefore && !(await isBypassed(host))) {
+    try {
+      await browser.tabs.update(tabId, { url: warningUrl(url) });
+    } catch {
+      // A prerendered or closing tab cannot be redirected, reloading it shows the page with its usual warning bar.
+      await writeTab(tabId, { url, hits, ipHits, redirectFailed: true });
+      await browser.tabs.reload(tabId).catch(() => undefined);
+      return;
+    }
     await addDetection({
       kind: 'reputation-block',
       action: 'blocked',
@@ -97,7 +111,6 @@ async function checkNavigation(tabId: number, url: string): Promise<void> {
       host,
       reasons: hits.flatMap((h) => h.records.map((r) => `${r.source}:${r.category}`)),
     });
-    await browser.tabs.update(tabId, { url: warningUrl(url) });
   }
 }
 
@@ -111,7 +124,8 @@ async function pageStatus(url: string, tabId: number | undefined): Promise<PageS
     state = { url, hits: await lookupKeys(lookupKeysForUrl(url)), ipHits: state?.url === url ? state.ipHits : [] };
     if (tabId !== undefined) await writeTab(tabId, state);
   }
-  const blocked = state.hits.length > 0 && settings.blockPage && !(await isBypassed(host));
+  // Worked out here as well, a page asking before the background finished its own lookup still learns that the warning page is coming.
+  const blocked = state.hits.length > 0 && settings.blockPage && !state.redirectFailed && !(await isBypassed(host));
   return { hits: [...state.hits, ...state.ipHits], trusted, blocked };
 }
 
@@ -175,6 +189,12 @@ async function handle(msg: Message, sender: Browser.runtime.MessageSender): Prom
     case 'clear-log':
       await browser.storage.local.set({ log: [] });
       return true;
+    case 'app-update-status':
+      return appUpdateStatus();
+    case 'app-update-check':
+      return checkNow();
+    case 'app-update-install':
+      return installNow();
   }
 }
 
@@ -211,7 +231,16 @@ export default defineBackground(() => {
     void ensureAlarm().catch(() => undefined);
   });
 
+  // Registered at the top so the browser hands the finished download to us instead of waiting for a browser restart.
+  browser.runtime.onUpdateAvailable.addListener((details) => {
+    void onDownloaded(details.version).catch(() => undefined);
+  });
+
   browser.alarms.onAlarm.addListener(async (alarm) => {
+    if (alarm.name === APPLY_ALARM) {
+      await applyWhenSafe();
+      return;
+    }
     if (alarm.name !== ALARM) return;
     const { settings } = await getEffective();
     if (settings.feedUpdates) await updateAll();
@@ -266,4 +295,9 @@ export default defineBackground(() => {
   void getEffective();
   void ensureAlarm().catch(() => undefined);
   void ensureFeed().catch(() => undefined);
+  void tidyAfterStart()
+    .then(applyWhenSafe)
+    .catch(() => undefined);
+  // A picked language keeps a copy of its texts, after an update that copy is renewed from the new version.
+  void renewI18nOverride().catch(() => undefined);
 });

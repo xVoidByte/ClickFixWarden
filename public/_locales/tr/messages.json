@@ -327,7 +327,7 @@
     "message": "Bu siteye güvenmeyi bırak"
   },
   "popupUpdated": {
-    "message": "$1 güncellendi, kural sürümü $2"
+    "message": "$1 güncellendi"
   },
   "popupFeedNone": {
     "message": "Veritabanı henüz indirilmedi"
@@ -351,7 +351,7 @@
     "message": "Güncelleniyor"
   },
   "popupRulesLine": {
-    "message": "Algılama kuralları sürümü $1, $2"
+    "message": "$1 tarihli algılama kuralları, $2"
   },
   "popupRulesBundled": {
     "message": "yerleşik"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Tarayıcı varsayılanı"
+  },
+  "updTitle": {
+    "message": "Güncellemeler"
+  },
+  "updVersion": {
+    "message": "Sürüm $1"
+  },
+  "updCurrent": {
+    "message": "En son sürümü kullanıyorsunuz."
+  },
+  "updAuto": {
+    "message": "Güncellemeler uzantı mağazasından kendiliğinden yüklenir."
+  },
+  "updChecking": {
+    "message": "Güncellemeler denetleniyor"
+  },
+  "updDownloading": {
+    "message": "$1 sürümü bulundu ve indiriliyor."
+  },
+  "updReady": {
+    "message": "$1 sürümü yüklenmeye hazır."
+  },
+  "updThrottled": {
+    "message": "Mağaza az önce sorgulandı, birkaç dakika sonra yeniden deneyin."
+  },
+  "updError": {
+    "message": "Mağazaya ulaşılamadı, daha sonra yeniden deneyin."
+  },
+  "updCheck": {
+    "message": "Güncellemeleri denetle"
+  },
+  "updApply": {
+    "message": "Şimdi güncelle"
+  },
+  "tipUpdCheck": {
+    "message": "Tarayıcının kendi denetimini beklemek yerine uzantı mağazasına şimdi daha yeni bir sürüm olup olmadığını sorar"
+  },
+  "tipUpdApply": {
+    "message": "Güncellemeyi tamamlamak için ClickFix Warden'ı yeniden başlatır, bu bir saniye sürer"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, $1 sürümü hazır, yüklemek için açın"
+  },
+  "btnCancel": {
+    "message": "İptal"
+  },
+  "logClearBody": {
+    "message": "Bu işlem geri alınamaz."
   }
 }

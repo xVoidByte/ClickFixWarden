@@ -42,9 +42,19 @@ const RTL = new Set(['ar', 'he']);
 interface Override {
   lang: string;
   messages: Record<string, string>;
+  /** The extension version the messages were copied from, an update makes them stale. */
+  version?: string;
 }
 
 let override: Override | null = null;
+
+const currentVersion = (): string => {
+  try {
+    return browser.runtime.getManifest().version;
+  } catch {
+    return '';
+  }
+};
 
 /** The language picked in the settings, empty when the browser language is used. */
 export function overrideLang(): string {
@@ -54,16 +64,29 @@ export function overrideLang(): string {
 export function setI18nOverride(value: unknown): void {
   const o = value as Override | null | undefined;
   override = o && typeof o.lang === 'string' && o.messages && typeof o.messages === 'object' ? o : null;
+  // Texts copied from another version can miss keys or placeholders, the browser's own copy is right until they are renewed.
+  if (override && override.version !== currentVersion()) override = { ...override, messages: {} };
 }
 
-/** Reads the language picked in the settings, if any, before a page renders. */
+/** Reads the language picked in the settings, if any, before a page renders, and renews it after an update. */
 export async function loadI18nOverride(): Promise<void> {
   try {
     const { i18nOverride } = await browser.storage.local.get('i18nOverride');
     setI18nOverride(i18nOverride);
+    const stored = i18nOverride as Override | undefined;
+    if (stored?.lang && stored.version !== currentVersion()) {
+      await chooseLanguage(stored.lang);
+      setI18nOverride((await browser.storage.local.get('i18nOverride')).i18nOverride);
+    }
   } catch {
-    override = null;
+    // keep what was read, the browser language fills any gap
   }
+}
+
+/** Copies the picked language's texts again from this version, the background calls it on every start. */
+export async function renewI18nOverride(): Promise<void> {
+  const { i18nOverride } = (await browser.storage.local.get('i18nOverride')) as { i18nOverride?: Override };
+  if (i18nOverride?.lang && i18nOverride.version !== currentVersion()) await chooseLanguage(i18nOverride.lang);
 }
 
 /** Loads a language's messages from the extension and stores them, an empty code goes back to the browser language. */
@@ -76,7 +99,7 @@ export async function chooseLanguage(code: string): Promise<void> {
   const raw = (await (await fetch(url)).json()) as Record<string, { message: string }>;
   const messages: Record<string, string> = {};
   for (const [key, value] of Object.entries(raw)) messages[key] = value.message;
-  await browser.storage.local.set({ i18nOverride: { lang: code, messages } });
+  await browser.storage.local.set({ i18nOverride: { lang: code, messages, version: currentVersion() } satisfies Override });
 }
 
 function fill(text: string, subs: string[]): string {

@@ -327,7 +327,7 @@
     "message": "इस साइट पर भरोसा हटाएँ"
   },
   "popupUpdated": {
-    "message": "$1 अपडेट हुआ, नियम संस्करण $2"
+    "message": "$1 अपडेट हुआ"
   },
   "popupFeedNone": {
     "message": "डेटाबेस अभी डाउनलोड नहीं हुआ है"
@@ -351,7 +351,7 @@
     "message": "अपडेट हो रहा है"
   },
   "popupRulesLine": {
-    "message": "पहचान नियम संस्करण $1, $2"
+    "message": "$1 के पहचान नियम, $2"
   },
   "popupRulesBundled": {
     "message": "बिल्ट-इन"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "ब्राउज़र डिफ़ॉल्ट"
+  },
+  "updTitle": {
+    "message": "अपडेट"
+  },
+  "updVersion": {
+    "message": "संस्करण $1"
+  },
+  "updCurrent": {
+    "message": "आपके पास नवीनतम संस्करण है।"
+  },
+  "updAuto": {
+    "message": "अपडेट एक्सटेंशन स्टोर से अपने आप इंस्टॉल हो जाते हैं।"
+  },
+  "updChecking": {
+    "message": "अपडेट की जाँच हो रही है"
+  },
+  "updDownloading": {
+    "message": "संस्करण $1 मिला है और डाउनलोड हो रहा है।"
+  },
+  "updReady": {
+    "message": "संस्करण $1 इंस्टॉल के लिए तैयार है।"
+  },
+  "updThrottled": {
+    "message": "स्टोर से अभी-अभी पूछा गया था, कुछ मिनट बाद फिर से कोशिश करें।"
+  },
+  "updError": {
+    "message": "स्टोर से संपर्क नहीं हो सका, बाद में फिर से कोशिश करें।"
+  },
+  "updCheck": {
+    "message": "अपडेट जाँचें"
+  },
+  "updApply": {
+    "message": "अभी अपडेट करें"
+  },
+  "tipUpdCheck": {
+    "message": "ब्राउज़र की अपनी जाँच का इंतज़ार करने के बजाय एक्सटेंशन स्टोर से अभी नए संस्करण के बारे में पूछता है"
+  },
+  "tipUpdApply": {
+    "message": "अपडेट पूरा करने के लिए ClickFix Warden को फिर से शुरू करता है, इसमें एक सेकंड लगता है"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, संस्करण $1 तैयार है, इसे इंस्टॉल करने के लिए खोलें"
+  },
+  "btnCancel": {
+    "message": "रद्द करें"
+  },
+  "logClearBody": {
+    "message": "इसे पूर्ववत नहीं किया जा सकता।"
   }
 }

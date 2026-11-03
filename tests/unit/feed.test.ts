@@ -53,6 +53,10 @@ describe('rules files', () => {
   it('bundled rules are usable', () => {
     expect(isUsableRules(rules)).toBe(true);
   });
+  it('carry a real date, the settings page shows it instead of the version number', () => {
+    expect(rules.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(Date.parse(rules.updated + 'T00:00:00Z')).toBeLessThanOrEqual(Date.now());
+  });
   it('a stored copy only wins when it is newer', () => {
     expect(pickRules({ ...rules, version: rules.version + 1 }).version).toBe(rules.version + 1);
     expect(pickRules({ ...rules, version: rules.version })).toBe(rules);

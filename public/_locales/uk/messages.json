@@ -327,7 +327,7 @@
     "message": "Більше не довіряти цьому сайту"
   },
   "popupUpdated": {
-    "message": "Оновлено $1, версія правил $2"
+    "message": "Оновлено $1"
   },
   "popupFeedNone": {
     "message": "Базу ще не завантажено"
@@ -351,7 +351,7 @@
     "message": "Оновлення"
   },
   "popupRulesLine": {
-    "message": "Версія правил виявлення $1, $2"
+    "message": "Правила виявлення від $1, $2"
   },
   "popupRulesBundled": {
     "message": "вбудовані"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Як у браузері"
+  },
+  "updTitle": {
+    "message": "Оновлення"
+  },
+  "updVersion": {
+    "message": "Версія $1"
+  },
+  "updCurrent": {
+    "message": "У вас найновіша версія."
+  },
+  "updAuto": {
+    "message": "Оновлення встановлюються самі з магазину розширень."
+  },
+  "updChecking": {
+    "message": "Пошук оновлень"
+  },
+  "updDownloading": {
+    "message": "Знайдено версію $1, триває завантаження."
+  },
+  "updReady": {
+    "message": "Версія $1 готова до встановлення."
+  },
+  "updThrottled": {
+    "message": "Магазин щойно перевірявся, спробуйте ще раз за кілька хвилин."
+  },
+  "updError": {
+    "message": "Магазин недоступний, спробуйте ще раз пізніше."
+  },
+  "updCheck": {
+    "message": "Перевірити оновлення"
+  },
+  "updApply": {
+    "message": "Оновити зараз"
+  },
+  "tipUpdCheck": {
+    "message": "Одразу запитує в магазину розширень новішу версію, не чекаючи власної перевірки браузера"
+  },
+  "tipUpdApply": {
+    "message": "Перезапускає ClickFix Warden, щоб завершити оновлення, це займе секунду"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, версія $1 готова, відкрийте, щоб установити її"
+  },
+  "btnCancel": {
+    "message": "Скасувати"
+  },
+  "logClearBody": {
+    "message": "Цю дію не можна скасувати."
   }
 }

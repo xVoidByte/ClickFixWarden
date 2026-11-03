@@ -327,7 +327,7 @@
     "message": "Deixar de confiar neste site"
   },
   "popupUpdated": {
-    "message": "Atualizado $1, versão das regras $2"
+    "message": "Atualizado $1"
   },
   "popupFeedNone": {
     "message": "Base de dados ainda não transferida"
@@ -351,7 +351,7 @@
     "message": "A atualizar"
   },
   "popupRulesLine": {
-    "message": "Regras de deteção versão $1, $2"
+    "message": "Regras de deteção de $1, $2"
   },
   "popupRulesBundled": {
     "message": "integradas"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Predefinição do navegador"
+  },
+  "updTitle": {
+    "message": "Atualizações"
+  },
+  "updVersion": {
+    "message": "Versão $1"
+  },
+  "updCurrent": {
+    "message": "Tem a versão mais recente."
+  },
+  "updAuto": {
+    "message": "As atualizações são instaladas automaticamente a partir da loja de extensões."
+  },
+  "updChecking": {
+    "message": "A procurar atualizações"
+  },
+  "updDownloading": {
+    "message": "Foi encontrada a versão $1, que está a ser transferida."
+  },
+  "updReady": {
+    "message": "A versão $1 está pronta para ser instalada."
+  },
+  "updThrottled": {
+    "message": "A loja foi consultada há instantes, tente novamente dentro de alguns minutos."
+  },
+  "updError": {
+    "message": "Não foi possível contactar a loja, tente novamente mais tarde."
+  },
+  "updCheck": {
+    "message": "Procurar atualizações"
+  },
+  "updApply": {
+    "message": "Atualizar agora"
+  },
+  "tipUpdCheck": {
+    "message": "Pergunta já à loja de extensões se há uma versão mais recente, em vez de esperar pela verificação do próprio navegador"
+  },
+  "tipUpdApply": {
+    "message": "Reinicia o ClickFix Warden para concluir a atualização, demora um segundo"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, a versão $1 está pronta, abra para a instalar"
+  },
+  "btnCancel": {
+    "message": "Cancelar"
+  },
+  "logClearBody": {
+    "message": "Esta ação não pode ser anulada."
   }
 }

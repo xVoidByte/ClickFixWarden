@@ -327,7 +327,7 @@
     "message": "Deze site niet meer vertrouwen"
   },
   "popupUpdated": {
-    "message": "Bijgewerkt $1, regelversie $2"
+    "message": "Bijgewerkt $1"
   },
   "popupFeedNone": {
     "message": "Database nog niet gedownload"
@@ -351,7 +351,7 @@
     "message": "Bijwerken"
   },
   "popupRulesLine": {
-    "message": "Detectieregels versie $1, $2"
+    "message": "Detectieregels van $1, $2"
   },
   "popupRulesBundled": {
     "message": "ingebouwd"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Browserstandaard"
+  },
+  "updTitle": {
+    "message": "Updates"
+  },
+  "updVersion": {
+    "message": "Versie $1"
+  },
+  "updCurrent": {
+    "message": "U hebt de nieuwste versie."
+  },
+  "updAuto": {
+    "message": "Updates worden vanzelf geïnstalleerd vanuit de extensiewinkel."
+  },
+  "updChecking": {
+    "message": "Bezig met zoeken naar updates"
+  },
+  "updDownloading": {
+    "message": "Versie $1 is gevonden en wordt gedownload."
+  },
+  "updReady": {
+    "message": "Versie $1 is klaar om te installeren."
+  },
+  "updThrottled": {
+    "message": "De winkel is zojuist al geraadpleegd, probeer het over een paar minuten opnieuw."
+  },
+  "updError": {
+    "message": "De winkel is niet bereikbaar, probeer het later opnieuw."
+  },
+  "updCheck": {
+    "message": "Zoeken naar updates"
+  },
+  "updApply": {
+    "message": "Nu bijwerken"
+  },
+  "tipUpdCheck": {
+    "message": "Vraagt de extensiewinkel nu om een nieuwere versie in plaats van te wachten op de controle van de browser zelf"
+  },
+  "tipUpdApply": {
+    "message": "Start ClickFix Warden opnieuw om de update af te ronden, dit duurt een seconde"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, versie $1 staat klaar, open om te installeren"
+  },
+  "btnCancel": {
+    "message": "Annuleren"
+  },
+  "logClearBody": {
+    "message": "Dit kan niet ongedaan worden gemaakt."
   }
 }

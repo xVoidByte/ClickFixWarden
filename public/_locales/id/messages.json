@@ -327,7 +327,7 @@
     "message": "Berhenti memercayai situs ini"
   },
   "popupUpdated": {
-    "message": "Diperbarui $1, versi aturan $2"
+    "message": "Diperbarui $1"
   },
   "popupFeedNone": {
     "message": "Basis data belum diunduh"
@@ -351,7 +351,7 @@
     "message": "Memperbarui"
   },
   "popupRulesLine": {
-    "message": "Aturan deteksi versi $1, $2"
+    "message": "Aturan deteksi tanggal $1, $2"
   },
   "popupRulesBundled": {
     "message": "bawaan"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Bawaan browser"
+  },
+  "updTitle": {
+    "message": "Pembaruan"
+  },
+  "updVersion": {
+    "message": "Versi $1"
+  },
+  "updCurrent": {
+    "message": "Anda sudah memakai versi terbaru."
+  },
+  "updAuto": {
+    "message": "Pembaruan terpasang dengan sendirinya dari toko ekstensi."
+  },
+  "updChecking": {
+    "message": "Memeriksa pembaruan"
+  },
+  "updDownloading": {
+    "message": "Versi $1 ditemukan dan sedang diunduh."
+  },
+  "updReady": {
+    "message": "Versi $1 siap dipasang."
+  },
+  "updThrottled": {
+    "message": "Toko baru saja diperiksa, coba lagi dalam beberapa menit."
+  },
+  "updError": {
+    "message": "Toko tidak dapat dihubungi, coba lagi nanti."
+  },
+  "updCheck": {
+    "message": "Periksa pembaruan"
+  },
+  "updApply": {
+    "message": "Perbarui sekarang"
+  },
+  "tipUpdCheck": {
+    "message": "Menanyakan versi yang lebih baru ke toko ekstensi sekarang juga alih-alih menunggu pemeriksaan bawaan browser"
+  },
+  "tipUpdApply": {
+    "message": "Memulai ulang ClickFix Warden untuk menyelesaikan pembaruan, hanya butuh satu detik"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, versi $1 sudah siap, buka untuk memasangnya"
+  },
+  "btnCancel": {
+    "message": "Batal"
+  },
+  "logClearBody": {
+    "message": "Tindakan ini tidak dapat dibatalkan."
   }
 }

@@ -327,7 +327,7 @@
     "message": "Dieser Website nicht mehr vertrauen"
   },
   "popupUpdated": {
-    "message": "Aktualisiert $1, Regelversion $2"
+    "message": "Aktualisiert $1"
   },
   "popupFeedNone": {
     "message": "Datenbank noch nicht heruntergeladen"
@@ -351,7 +351,7 @@
     "message": "Wird aktualisiert"
   },
   "popupRulesLine": {
-    "message": "Erkennungsregeln Version $1, $2"
+    "message": "Erkennungsregeln vom $1, $2"
   },
   "popupRulesBundled": {
     "message": "integriert"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Browserstandard"
+  },
+  "updTitle": {
+    "message": "Updates"
+  },
+  "updVersion": {
+    "message": "Version $1"
+  },
+  "updCurrent": {
+    "message": "Sie haben die neueste Version."
+  },
+  "updAuto": {
+    "message": "Updates werden automatisch über den Add-on-Store installiert."
+  },
+  "updChecking": {
+    "message": "Suche nach Updates"
+  },
+  "updDownloading": {
+    "message": "Version $1 wurde gefunden und wird heruntergeladen."
+  },
+  "updReady": {
+    "message": "Version $1 ist bereit zur Installation."
+  },
+  "updThrottled": {
+    "message": "Der Store wurde gerade erst abgefragt, versuchen Sie es in ein paar Minuten erneut."
+  },
+  "updError": {
+    "message": "Der Store ist nicht erreichbar, versuchen Sie es später erneut."
+  },
+  "updCheck": {
+    "message": "Nach Updates suchen"
+  },
+  "updApply": {
+    "message": "Jetzt aktualisieren"
+  },
+  "tipUpdCheck": {
+    "message": "Fragt jetzt im Add-on-Store nach einer neueren Version, statt auf die Prüfung durch den Browser zu warten"
+  },
+  "tipUpdApply": {
+    "message": "Startet ClickFix Warden neu, um das Update abzuschließen, das dauert nur eine Sekunde"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, Version $1 ist bereit, zum Installieren öffnen"
+  },
+  "btnCancel": {
+    "message": "Abbrechen"
+  },
+  "logClearBody": {
+    "message": "Das kann nicht rückgängig gemacht werden."
   }
 }

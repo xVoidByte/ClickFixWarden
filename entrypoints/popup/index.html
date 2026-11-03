@@ -12,6 +12,9 @@
       .onoff { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; }
       .onoff input { width: 18px; height: 18px; margin: 0; accent-color: #F3F3F4; }
       .off { margin: 0 12px 10px; padding: 10px 14px; border-radius: 12px; background: var(--redbg); color: #FFFFFF; font-size: 14px; }
+      .upd { margin: 0 12px 10px; padding: 10px 10px 10px 14px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line2); display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text); }
+      .upd[hidden] { display: none; }
+      .upd span { flex: 1; }
       .site { margin: 0 12px; padding: 14px; border-radius: 12px; background: var(--raised); }
       .site .host { font-size: 15px; font-weight: 600; word-break: break-all; }
       .site .status { margin-top: 4px; font-size: 14px; color: var(--text2); }
@@ -40,6 +43,7 @@
       <label class="onoff" data-i18n-title="tipEnabled"><input type="checkbox" id="enabled" /> <span data-i18n="popupOn">On</span></label>
     </header>
     <div class="off" id="offNote" hidden data-i18n="popupOff">Protection is turned off.</div>
+    <div class="upd" id="appUpdate" hidden></div>
     <div class="site">
       <div class="host" id="host"></div>
       <div class="status" id="status"></div>

@@ -327,7 +327,7 @@
     "message": "このサイトの信頼をやめる"
   },
   "popupUpdated": {
-    "message": "最終更新 $1、ルール バージョン $2"
+    "message": "最終更新 $1"
   },
   "popupFeedNone": {
     "message": "データベースはまだダウンロードされていません"
@@ -351,7 +351,7 @@
     "message": "更新中"
   },
   "popupRulesLine": {
-    "message": "検出ルール バージョン $1、$2"
+    "message": "$1 の検出ルール、$2"
   },
   "popupRulesBundled": {
     "message": "組み込み"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "ブラウザーの既定"
+  },
+  "updTitle": {
+    "message": "更新"
+  },
+  "updVersion": {
+    "message": "バージョン $1"
+  },
+  "updCurrent": {
+    "message": "最新バージョンをお使いです。"
+  },
+  "updAuto": {
+    "message": "更新は拡張機能ストアから自動的にインストールされます。"
+  },
+  "updChecking": {
+    "message": "更新を確認しています"
+  },
+  "updDownloading": {
+    "message": "バージョン $1 が見つかり、ダウンロードしています。"
+  },
+  "updReady": {
+    "message": "バージョン $1 をインストールする準備ができました。"
+  },
+  "updThrottled": {
+    "message": "少し前にストアに問い合わせたばかりです。数分後にもう一度お試しください。"
+  },
+  "updError": {
+    "message": "ストアに接続できませんでした。しばらくしてからもう一度お試しください。"
+  },
+  "updCheck": {
+    "message": "更新を確認"
+  },
+  "updApply": {
+    "message": "今すぐ更新"
+  },
+  "tipUpdCheck": {
+    "message": "ブラウザーによる確認を待たずに、今すぐ拡張機能ストアで新しいバージョンを確認します"
+  },
+  "tipUpdApply": {
+    "message": "更新を完了するために ClickFix Warden を再起動します。すぐに終わります"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden、バージョン $1 の準備ができました。開いてインストールしてください"
+  },
+  "btnCancel": {
+    "message": "キャンセル"
+  },
+  "logClearBody": {
+    "message": "この操作は元に戻せません。"
   }
 }

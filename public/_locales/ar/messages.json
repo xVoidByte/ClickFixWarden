@@ -327,7 +327,7 @@
     "message": "التوقف عن الوثوق بهذا الموقع"
   },
   "popupUpdated": {
-    "message": "تم التحديث $1، إصدار القواعد $2"
+    "message": "تم التحديث $1"
   },
   "popupFeedNone": {
     "message": "لم يتم تنزيل قاعدة البيانات بعد"
@@ -351,7 +351,7 @@
     "message": "جارٍ التحديث"
   },
   "popupRulesLine": {
-    "message": "إصدار قواعد الكشف $1، $2"
+    "message": "قواعد الكشف بتاريخ $1، $2"
   },
   "popupRulesBundled": {
     "message": "مضمّنة"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "لغة المتصفح الافتراضية"
+  },
+  "updTitle": {
+    "message": "التحديثات"
+  },
+  "updVersion": {
+    "message": "الإصدار $1"
+  },
+  "updCurrent": {
+    "message": "لديك أحدث إصدار."
+  },
+  "updAuto": {
+    "message": "تُثبَّت التحديثات تلقائيًا من متجر الإضافات."
+  },
+  "updChecking": {
+    "message": "جارٍ البحث عن تحديثات"
+  },
+  "updDownloading": {
+    "message": "تم العثور على الإصدار $1 وجارٍ تنزيله."
+  },
+  "updReady": {
+    "message": "الإصدار $1 جاهز للتثبيت."
+  },
+  "updThrottled": {
+    "message": "تم التحقق من المتجر قبل لحظات، حاول مرة أخرى بعد بضع دقائق."
+  },
+  "updError": {
+    "message": "تعذّر الوصول إلى المتجر، حاول مرة أخرى لاحقًا."
+  },
+  "updCheck": {
+    "message": "البحث عن تحديثات"
+  },
+  "updApply": {
+    "message": "التحديث الآن"
+  },
+  "tipUpdCheck": {
+    "message": "يتحقق الآن من متجر الإضافات بحثًا عن إصدار أحدث بدلًا من انتظار فحص المتصفح نفسه"
+  },
+  "tipUpdApply": {
+    "message": "يعيد تشغيل ClickFix Warden لإكمال التحديث، ويستغرق ذلك ثانية واحدة"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden، الإصدار $1 جاهز، افتحه لتثبيته"
+  },
+  "btnCancel": {
+    "message": "إلغاء"
+  },
+  "logClearBody": {
+    "message": "لا يمكن التراجع عن ذلك."
   }
 }

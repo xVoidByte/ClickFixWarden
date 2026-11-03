@@ -53,7 +53,10 @@ export type Message =
   | { type: 'leave-site' }
   | { type: 'bypass'; url: string }
   | { type: 'update-now' }
-  | { type: 'clear-log' };
+  | { type: 'clear-log' }
+  | { type: 'app-update-status' }
+  | { type: 'app-update-check' }
+  | { type: 'app-update-install' };
 
 /** Messages the background sends into a tab. */
 export type TabMessage = { type: 'reputation-update' } | { type: 'show-alert'; alert: AlertData };

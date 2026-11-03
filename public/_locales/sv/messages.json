@@ -327,7 +327,7 @@
     "message": "Sluta lita på webbplatsen"
   },
   "popupUpdated": {
-    "message": "Uppdaterad $1, regelversion $2"
+    "message": "Uppdaterad $1"
   },
   "popupFeedNone": {
     "message": "Databasen har inte laddats ner än"
@@ -351,7 +351,7 @@
     "message": "Uppdaterar"
   },
   "popupRulesLine": {
-    "message": "Identifieringsregler version $1, $2"
+    "message": "Identifieringsregler från $1, $2"
   },
   "popupRulesBundled": {
     "message": "inbyggda"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Webbläsarens standard"
+  },
+  "updTitle": {
+    "message": "Uppdateringar"
+  },
+  "updVersion": {
+    "message": "Version $1"
+  },
+  "updCurrent": {
+    "message": "Du har den senaste versionen."
+  },
+  "updAuto": {
+    "message": "Uppdateringar installeras av sig själva från tilläggsbutiken."
+  },
+  "updChecking": {
+    "message": "Söker efter uppdateringar"
+  },
+  "updDownloading": {
+    "message": "Version $1 hittades och laddas ner."
+  },
+  "updReady": {
+    "message": "Version $1 är redo att installeras."
+  },
+  "updThrottled": {
+    "message": "Butiken tillfrågades nyss, försök igen om några minuter."
+  },
+  "updError": {
+    "message": "Det gick inte att nå butiken, försök igen senare."
+  },
+  "updCheck": {
+    "message": "Sök efter uppdateringar"
+  },
+  "updApply": {
+    "message": "Uppdatera nu"
+  },
+  "tipUpdCheck": {
+    "message": "Frågar tilläggsbutiken efter en nyare version direkt i stället för att vänta på webbläsarens egen kontroll"
+  },
+  "tipUpdApply": {
+    "message": "Startar om ClickFix Warden för att slutföra uppdateringen, det tar en sekund"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, version $1 är redo, öppna för att installera den"
+  },
+  "btnCancel": {
+    "message": "Avbryt"
+  },
+  "logClearBody": {
+    "message": "Det går inte att ångra."
   }
 }

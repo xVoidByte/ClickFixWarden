@@ -327,7 +327,7 @@
     "message": "Ngừng tin cậy trang này"
   },
   "popupUpdated": {
-    "message": "Cập nhật $1, phiên bản quy tắc $2"
+    "message": "Cập nhật $1"
   },
   "popupFeedNone": {
     "message": "Chưa tải cơ sở dữ liệu xuống"
@@ -351,7 +351,7 @@
     "message": "Đang cập nhật"
   },
   "popupRulesLine": {
-    "message": "Quy tắc phát hiện phiên bản $1, $2"
+    "message": "Quy tắc phát hiện ngày $1, $2"
   },
   "popupRulesBundled": {
     "message": "có sẵn"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Mặc định của trình duyệt"
+  },
+  "updTitle": {
+    "message": "Cập nhật"
+  },
+  "updVersion": {
+    "message": "Phiên bản $1"
+  },
+  "updCurrent": {
+    "message": "Bạn đang dùng phiên bản mới nhất."
+  },
+  "updAuto": {
+    "message": "Các bản cập nhật tự cài đặt từ cửa hàng tiện ích."
+  },
+  "updChecking": {
+    "message": "Đang kiểm tra bản cập nhật"
+  },
+  "updDownloading": {
+    "message": "Đã tìm thấy phiên bản $1 và đang tải xuống."
+  },
+  "updReady": {
+    "message": "Phiên bản $1 đã sẵn sàng để cài đặt."
+  },
+  "updThrottled": {
+    "message": "Vừa kiểm tra cửa hàng xong, hãy thử lại sau vài phút."
+  },
+  "updError": {
+    "message": "Không thể kết nối với cửa hàng, hãy thử lại sau."
+  },
+  "updCheck": {
+    "message": "Kiểm tra bản cập nhật"
+  },
+  "updApply": {
+    "message": "Cập nhật ngay"
+  },
+  "tipUpdCheck": {
+    "message": "Hỏi cửa hàng tiện ích ngay bây giờ xem có phiên bản mới hơn không thay vì chờ trình duyệt tự kiểm tra"
+  },
+  "tipUpdApply": {
+    "message": "Khởi động lại ClickFix Warden để hoàn tất bản cập nhật, chỉ mất một giây"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, phiên bản $1 đã sẵn sàng, mở ra để cài đặt"
+  },
+  "btnCancel": {
+    "message": "Hủy"
+  },
+  "logClearBody": {
+    "message": "Không thể hoàn tác thao tác này."
   }
 }

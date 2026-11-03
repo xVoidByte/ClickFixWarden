@@ -327,7 +327,7 @@
     "message": "Non considerare più attendibile"
   },
   "popupUpdated": {
-    "message": "Aggiornato $1, regole versione $2"
+    "message": "Aggiornato $1"
   },
   "popupFeedNone": {
     "message": "Database non ancora scaricato"
@@ -351,7 +351,7 @@
     "message": "Aggiornamento in corso"
   },
   "popupRulesLine": {
-    "message": "Regole di rilevamento versione $1, $2"
+    "message": "Regole di rilevamento del $1, $2"
   },
   "popupRulesBundled": {
     "message": "integrate"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Predefinita del browser"
+  },
+  "updTitle": {
+    "message": "Aggiornamenti"
+  },
+  "updVersion": {
+    "message": "Versione $1"
+  },
+  "updCurrent": {
+    "message": "Hai la versione più recente."
+  },
+  "updAuto": {
+    "message": "Gli aggiornamenti si installano da soli dallo store delle estensioni."
+  },
+  "updChecking": {
+    "message": "Ricerca di aggiornamenti in corso"
+  },
+  "updDownloading": {
+    "message": "La versione $1 è stata trovata ed è in download."
+  },
+  "updReady": {
+    "message": "La versione $1 è pronta per essere installata."
+  },
+  "updThrottled": {
+    "message": "Lo store è stato interpellato un attimo fa, riprova tra qualche minuto."
+  },
+  "updError": {
+    "message": "Impossibile raggiungere lo store, riprova più tardi."
+  },
+  "updCheck": {
+    "message": "Cerca aggiornamenti"
+  },
+  "updApply": {
+    "message": "Aggiorna ora"
+  },
+  "tipUpdCheck": {
+    "message": "Chiede subito allo store delle estensioni se c'è una versione più recente invece di aspettare il controllo del browser"
+  },
+  "tipUpdApply": {
+    "message": "Riavvia ClickFix Warden per completare l'aggiornamento, ci vuole un secondo"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, la versione $1 è pronta, apri per installarla"
+  },
+  "btnCancel": {
+    "message": "Annulla"
+  },
+  "logClearBody": {
+    "message": "L'operazione non può essere annullata."
   }
 }

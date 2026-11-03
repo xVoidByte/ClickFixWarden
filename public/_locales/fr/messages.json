@@ -327,7 +327,7 @@
     "message": "Ne plus faire confiance à ce site"
   },
   "popupUpdated": {
-    "message": "Mis à jour $1, règles version $2"
+    "message": "Mis à jour $1"
   },
   "popupFeedNone": {
     "message": "Base de données pas encore téléchargée"
@@ -351,7 +351,7 @@
     "message": "Mise à jour en cours"
   },
   "popupRulesLine": {
-    "message": "Règles de détection version $1, $2"
+    "message": "Règles de détection du $1, $2"
   },
   "popupRulesBundled": {
     "message": "intégrées"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Langue du navigateur"
+  },
+  "updTitle": {
+    "message": "Mises à jour"
+  },
+  "updVersion": {
+    "message": "Version $1"
+  },
+  "updCurrent": {
+    "message": "Vous avez la dernière version."
+  },
+  "updAuto": {
+    "message": "Les mises à jour s'installent d'elles-mêmes depuis la boutique d'extensions."
+  },
+  "updChecking": {
+    "message": "Recherche de mises à jour"
+  },
+  "updDownloading": {
+    "message": "La version $1 a été trouvée et est en cours de téléchargement."
+  },
+  "updReady": {
+    "message": "La version $1 est prête à être installée."
+  },
+  "updThrottled": {
+    "message": "La boutique a été interrogée il y a un instant, réessayez dans quelques minutes."
+  },
+  "updError": {
+    "message": "Impossible de joindre la boutique, réessayez plus tard."
+  },
+  "updCheck": {
+    "message": "Rechercher des mises à jour"
+  },
+  "updApply": {
+    "message": "Mettre à jour"
+  },
+  "tipUpdCheck": {
+    "message": "Demande dès maintenant une version plus récente à la boutique d'extensions au lieu d'attendre la vérification du navigateur"
+  },
+  "tipUpdApply": {
+    "message": "Redémarre ClickFix Warden pour terminer la mise à jour, cela prend une seconde"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, la version $1 est prête, ouvrez pour l'installer"
+  },
+  "btnCancel": {
+    "message": "Annuler"
+  },
+  "logClearBody": {
+    "message": "Cette action est irréversible."
   }
 }

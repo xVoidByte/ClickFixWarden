@@ -327,7 +327,7 @@
     "message": "הפסקת האמון באתר"
   },
   "popupUpdated": {
-    "message": "עודכן $1, גרסת כללים $2"
+    "message": "עודכן $1"
   },
   "popupFeedNone": {
     "message": "מסד הנתונים עדיין לא הורד"
@@ -351,7 +351,7 @@
     "message": "מתבצע עדכון"
   },
   "popupRulesLine": {
-    "message": "גרסת כללי הזיהוי $1, $2"
+    "message": "כללי הזיהוי מתאריך $1, $2"
   },
   "popupRulesBundled": {
     "message": "מובנים"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "ברירת המחדל של הדפדפן"
+  },
+  "updTitle": {
+    "message": "עדכונים"
+  },
+  "updVersion": {
+    "message": "גרסה $1"
+  },
+  "updCurrent": {
+    "message": "יש לך את הגרסה העדכנית ביותר."
+  },
+  "updAuto": {
+    "message": "העדכונים מותקנים מעצמם מחנות התוספים."
+  },
+  "updChecking": {
+    "message": "מתבצע חיפוש עדכונים"
+  },
+  "updDownloading": {
+    "message": "נמצאה גרסה $1 והיא בהורדה."
+  },
+  "updReady": {
+    "message": "גרסה $1 מוכנה להתקנה."
+  },
+  "updThrottled": {
+    "message": "החנות נבדקה לפני רגע, אפשר לנסות שוב בעוד כמה דקות."
+  },
+  "updError": {
+    "message": "לא ניתן להתחבר לחנות, אפשר לנסות שוב מאוחר יותר."
+  },
+  "updCheck": {
+    "message": "חיפוש עדכונים"
+  },
+  "updApply": {
+    "message": "עדכון עכשיו"
+  },
+  "tipUpdCheck": {
+    "message": "שואל את חנות התוספים על גרסה חדשה יותר כבר עכשיו, במקום לחכות לבדיקה של הדפדפן עצמו"
+  },
+  "tipUpdApply": {
+    "message": "מפעיל מחדש את ClickFix Warden כדי לסיים את העדכון, זה לוקח שנייה"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, גרסה $1 מוכנה, יש לפתוח כדי להתקין אותה"
+  },
+  "btnCancel": {
+    "message": "ביטול"
+  },
+  "logClearBody": {
+    "message": "לא ניתן לבטל פעולה זו."
   }
 }

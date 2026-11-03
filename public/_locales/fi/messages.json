@@ -327,7 +327,7 @@
     "message": "Lopeta sivustoon luottaminen"
   },
   "popupUpdated": {
-    "message": "Päivitetty $1, sääntöversio $2"
+    "message": "Päivitetty $1"
   },
   "popupFeedNone": {
     "message": "Tietokantaa ei ole vielä ladattu"
@@ -351,7 +351,7 @@
     "message": "Päivitetään"
   },
   "popupRulesLine": {
-    "message": "Tunnistussääntöjen versio $1, $2"
+    "message": "Tunnistussäännöt $1, $2"
   },
   "popupRulesBundled": {
     "message": "sisäänrakennettu"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Selaimen oletus"
+  },
+  "updTitle": {
+    "message": "Päivitykset"
+  },
+  "updVersion": {
+    "message": "Versio $1"
+  },
+  "updCurrent": {
+    "message": "Sinulla on uusin versio."
+  },
+  "updAuto": {
+    "message": "Päivitykset asentuvat itsestään laajennuskaupasta."
+  },
+  "updChecking": {
+    "message": "Etsitään päivityksiä"
+  },
+  "updDownloading": {
+    "message": "Versio $1 löytyi ja sitä ladataan."
+  },
+  "updReady": {
+    "message": "Versio $1 on valmis asennettavaksi."
+  },
+  "updThrottled": {
+    "message": "Kaupalta kysyttiin juuri, yritä uudelleen muutaman minuutin kuluttua."
+  },
+  "updError": {
+    "message": "Kauppaan ei saatu yhteyttä, yritä myöhemmin uudelleen."
+  },
+  "updCheck": {
+    "message": "Etsi päivityksiä"
+  },
+  "updApply": {
+    "message": "Päivitä nyt"
+  },
+  "tipUpdCheck": {
+    "message": "Kysyy laajennuskaupalta uudempaa versiota heti sen sijaan, että odottaisi selaimen omaa tarkistusta"
+  },
+  "tipUpdApply": {
+    "message": "Käynnistää ClickFix Wardenin uudelleen päivityksen viimeistelemiseksi, tämä vie sekunnin"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, versio $1 on valmis, avaa ja asenna se"
+  },
+  "btnCancel": {
+    "message": "Peruuta"
+  },
+  "logClearBody": {
+    "message": "Tätä ei voi kumota."
   }
 }

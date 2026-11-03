@@ -327,7 +327,7 @@
     "message": "Stop med at stole på webstedet"
   },
   "popupUpdated": {
-    "message": "Opdateret $1, regelversion $2"
+    "message": "Opdateret $1"
   },
   "popupFeedNone": {
     "message": "Databasen er ikke downloadet endnu"
@@ -351,7 +351,7 @@
     "message": "Opdaterer"
   },
   "popupRulesLine": {
-    "message": "Registreringsregler version $1, $2"
+    "message": "Registreringsregler fra $1, $2"
   },
   "popupRulesBundled": {
     "message": "indbyggede"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Browserens standard"
+  },
+  "updTitle": {
+    "message": "Opdateringer"
+  },
+  "updVersion": {
+    "message": "Version $1"
+  },
+  "updCurrent": {
+    "message": "Du har den nyeste version."
+  },
+  "updAuto": {
+    "message": "Opdateringer installeres af sig selv fra udvidelsesbutikken."
+  },
+  "updChecking": {
+    "message": "Søger efter opdateringer"
+  },
+  "updDownloading": {
+    "message": "Version $1 er fundet og downloades nu."
+  },
+  "updReady": {
+    "message": "Version $1 er klar til at blive installeret."
+  },
+  "updThrottled": {
+    "message": "Butikken blev spurgt for et øjeblik siden, prøv igen om et par minutter."
+  },
+  "updError": {
+    "message": "Butikken kunne ikke nås, prøv igen senere."
+  },
+  "updCheck": {
+    "message": "Søg efter opdateringer"
+  },
+  "updApply": {
+    "message": "Opdater nu"
+  },
+  "tipUpdCheck": {
+    "message": "Spørger udvidelsesbutikken efter en nyere version nu i stedet for at vente på browserens egen kontrol"
+  },
+  "tipUpdApply": {
+    "message": "Genstarter ClickFix Warden for at fuldføre opdateringen, det tager et sekund"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, version $1 er klar, åbn for at installere den"
+  },
+  "btnCancel": {
+    "message": "Annuller"
+  },
+  "logClearBody": {
+    "message": "Det kan ikke fortrydes."
   }
 }

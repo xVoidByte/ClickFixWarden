@@ -327,7 +327,7 @@
     "message": "Přestat důvěřovat tomuto webu"
   },
   "popupUpdated": {
-    "message": "Aktualizováno $1, verze pravidel $2"
+    "message": "Aktualizováno $1"
   },
   "popupFeedNone": {
     "message": "Databáze zatím nebyla stažena"
@@ -351,7 +351,7 @@
     "message": "Aktualizace"
   },
   "popupRulesLine": {
-    "message": "Verze pravidel detekce $1, $2"
+    "message": "Pravidla detekce z $1, $2"
   },
   "popupRulesBundled": {
     "message": "vestavěná"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Podle prohlížeče"
+  },
+  "updTitle": {
+    "message": "Aktualizace"
+  },
+  "updVersion": {
+    "message": "Verze $1"
+  },
+  "updCurrent": {
+    "message": "Máte nejnovější verzi."
+  },
+  "updAuto": {
+    "message": "Aktualizace se instalují samy z obchodu s rozšířeními."
+  },
+  "updChecking": {
+    "message": "Hledají se aktualizace"
+  },
+  "updDownloading": {
+    "message": "Byla nalezena verze $1 a právě se stahuje."
+  },
+  "updReady": {
+    "message": "Verze $1 je připravena k instalaci."
+  },
+  "updThrottled": {
+    "message": "Obchod byl dotázán před chvílí, zkuste to znovu za pár minut."
+  },
+  "updError": {
+    "message": "K obchodu se nepodařilo připojit, zkuste to znovu později."
+  },
+  "updCheck": {
+    "message": "Zkontrolovat aktualizace"
+  },
+  "updApply": {
+    "message": "Aktualizovat nyní"
+  },
+  "tipUpdCheck": {
+    "message": "Hned teď se zeptá obchodu s rozšířeními na novější verzi, místo aby čekal na vlastní kontrolu prohlížeče"
+  },
+  "tipUpdApply": {
+    "message": "Restartuje ClickFix Warden, aby se aktualizace dokončila, trvá to jen chvilku"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, verze $1 je připravena, otevřením ji nainstalujete"
+  },
+  "btnCancel": {
+    "message": "Zrušit"
+  },
+  "logClearBody": {
+    "message": "Tuto akci nelze vrátit zpět."
   }
 }

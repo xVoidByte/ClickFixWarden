@@ -1,5 +1,4 @@
 import { browser } from 'wxt/browser';
-import { pickRules } from '../../src/engine/rules';
 import type { FeedMeta, UpdateState } from '../../src/feed/types';
 import { DONATE_URL } from '../../src/shared/constants';
 import { loadI18nOverride, localizePage, relativeTime, t, tParts } from '../../src/shared/i18n';
@@ -7,6 +6,7 @@ import type { Detection, Message, PageStatus } from '../../src/shared/messages';
 import { computeEffectiveSettings, isTrusted, saveSettings } from '../../src/shared/settings';
 import { confirmDialog, el } from '../../src/ui/graphite';
 import { addPageParts } from '../../src/ui/page-parts';
+import { drawUpdateBar, watchUpdate } from '../../src/ui/update-row';
 
 addPageParts();
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -72,17 +72,16 @@ async function render(): Promise<void> {
     }
   }
 
-  const { feedMeta, updateState, rules } = (await browser.storage.local.get(['feedMeta', 'updateState', 'rules'])) as {
+  const { feedMeta, updateState } = (await browser.storage.local.get(['feedMeta', 'updateState'])) as {
     feedMeta?: FeedMeta;
     updateState?: UpdateState;
-    rules?: unknown;
   };
   const stats = $('stats');
   stats.replaceChildren();
   if (feedMeta?.count) {
     const first = el(document, 'div');
     first.append(...tParts('popupReports', [el(document, 'strong', undefined, feedMeta.count.toLocaleString())]));
-    stats.append(first, el(document, 'div', undefined, t('popupUpdated', [relativeTime(feedMeta.generated), String(pickRules(rules).version)])));
+    stats.append(first, el(document, 'div', undefined, t('popupUpdated', relativeTime(feedMeta.generated))));
   } else {
     stats.append(el(document, 'div', undefined, updateState?.lastError ? t('popupFeedError') : t('popupFeedNone')));
   }
@@ -124,5 +123,6 @@ if (DONATE_URL) {
 void (async () => {
   await loadI18nOverride();
   localizePage();
+  watchUpdate((s) => drawUpdateBar($('appUpdate'), s));
   await render();
 })();

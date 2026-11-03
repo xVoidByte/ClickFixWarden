@@ -2,7 +2,7 @@
   "format": 1,
   "version": 5,
   "minEngine": 1,
-  "updated": "2026-10-31",
+  "updated": "2026-11-02",
   "thresholds": {
     "block": 70,
     "warn": 45,

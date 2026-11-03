@@ -327,7 +327,7 @@
     "message": "Retrageți încrederea în site"
   },
   "popupUpdated": {
-    "message": "Actualizat $1, versiunea regulilor $2"
+    "message": "Actualizat $1"
   },
   "popupFeedNone": {
     "message": "Baza de date nu a fost descărcată încă"
@@ -351,7 +351,7 @@
     "message": "Se actualizează"
   },
   "popupRulesLine": {
-    "message": "Reguli de detectare versiunea $1, $2"
+    "message": "Reguli de detectare din $1, $2"
   },
   "popupRulesBundled": {
     "message": "integrate"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Limba browserului"
+  },
+  "updTitle": {
+    "message": "Actualizări"
+  },
+  "updVersion": {
+    "message": "Versiunea $1"
+  },
+  "updCurrent": {
+    "message": "Aveți cea mai nouă versiune."
+  },
+  "updAuto": {
+    "message": "Actualizările se instalează singure din magazinul de extensii."
+  },
+  "updChecking": {
+    "message": "Se caută actualizări"
+  },
+  "updDownloading": {
+    "message": "Versiunea $1 a fost găsită și se descarcă."
+  },
+  "updReady": {
+    "message": "Versiunea $1 este gata de instalare."
+  },
+  "updThrottled": {
+    "message": "Magazinul a fost interogat acum câteva clipe, încercați din nou peste câteva minute."
+  },
+  "updError": {
+    "message": "Magazinul nu a putut fi accesat, încercați din nou mai târziu."
+  },
+  "updCheck": {
+    "message": "Căutați actualizări"
+  },
+  "updApply": {
+    "message": "Actualizați acum"
+  },
+  "tipUpdCheck": {
+    "message": "Întreabă acum magazinul de extensii dacă există o versiune mai nouă, în loc să aștepte verificarea făcută de browser"
+  },
+  "tipUpdApply": {
+    "message": "Repornește ClickFix Warden pentru a finaliza actualizarea, durează o secundă"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, versiunea $1 este gata, deschideți pentru a o instala"
+  },
+  "btnCancel": {
+    "message": "Anulează"
+  },
+  "logClearBody": {
+    "message": "Acțiunea nu poate fi anulată."
   }
 }

@@ -327,7 +327,7 @@
     "message": "Prestať dôverovať tomuto webu"
   },
   "popupUpdated": {
-    "message": "Aktualizované $1, verzia pravidiel $2"
+    "message": "Aktualizované $1"
   },
   "popupFeedNone": {
     "message": "Databáza ešte nebola stiahnutá"
@@ -351,7 +351,7 @@
     "message": "Aktualizuje sa"
   },
   "popupRulesLine": {
-    "message": "Verzia pravidiel detekcie $1, $2"
+    "message": "Pravidlá detekcie z $1, $2"
   },
   "popupRulesBundled": {
     "message": "vstavané"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Podľa prehliadača"
+  },
+  "updTitle": {
+    "message": "Aktualizácie"
+  },
+  "updVersion": {
+    "message": "Verzia $1"
+  },
+  "updCurrent": {
+    "message": "Máte najnovšiu verziu."
+  },
+  "updAuto": {
+    "message": "Aktualizácie sa inštalujú samy z obchodu s rozšíreniami."
+  },
+  "updChecking": {
+    "message": "Hľadajú sa aktualizácie"
+  },
+  "updDownloading": {
+    "message": "Našla sa verzia $1 a práve sa sťahuje."
+  },
+  "updReady": {
+    "message": "Verzia $1 je pripravená na inštaláciu."
+  },
+  "updThrottled": {
+    "message": "Obchod sa kontroloval pred chvíľou, skúste to znova o pár minút."
+  },
+  "updError": {
+    "message": "K obchodu sa nepodarilo pripojiť, skúste to znova neskôr."
+  },
+  "updCheck": {
+    "message": "Skontrolovať aktualizácie"
+  },
+  "updApply": {
+    "message": "Aktualizovať teraz"
+  },
+  "tipUpdCheck": {
+    "message": "Hneď teraz sa spýta obchodu s rozšíreniami na novšiu verziu namiesto čakania na vlastnú kontrolu prehliadača"
+  },
+  "tipUpdApply": {
+    "message": "Reštartuje ClickFix Warden, aby sa aktualizácia dokončila, trvá to sekundu"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, verzia $1 je pripravená, otvorením ju nainštalujete"
+  },
+  "btnCancel": {
+    "message": "Zrušiť"
+  },
+  "logClearBody": {
+    "message": "Túto akciu nie je možné vrátiť späť."
   }
 }

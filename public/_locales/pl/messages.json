@@ -327,7 +327,7 @@
     "message": "Przestań ufać tej stronie"
   },
   "popupUpdated": {
-    "message": "Zaktualizowano $1, wersja reguł $2"
+    "message": "Zaktualizowano $1"
   },
   "popupFeedNone": {
     "message": "Baza nie została jeszcze pobrana"
@@ -351,7 +351,7 @@
     "message": "Aktualizowanie"
   },
   "popupRulesLine": {
-    "message": "Wersja reguł wykrywania $1, $2"
+    "message": "Reguły wykrywania z $1, $2"
   },
   "popupRulesBundled": {
     "message": "wbudowane"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Język przeglądarki"
+  },
+  "updTitle": {
+    "message": "Aktualizacje"
+  },
+  "updVersion": {
+    "message": "Wersja $1"
+  },
+  "updCurrent": {
+    "message": "Zainstalowana jest najnowsza wersja."
+  },
+  "updAuto": {
+    "message": "Aktualizacje instalują się same ze sklepu z rozszerzeniami."
+  },
+  "updChecking": {
+    "message": "Sprawdzanie aktualizacji"
+  },
+  "updDownloading": {
+    "message": "Znaleziono wersję $1, trwa pobieranie."
+  },
+  "updReady": {
+    "message": "Wersja $1 jest gotowa do instalacji."
+  },
+  "updThrottled": {
+    "message": "Sklep został sprawdzony przed chwilą, spróbuj ponownie za kilka minut."
+  },
+  "updError": {
+    "message": "Nie udało się połączyć ze sklepem, spróbuj ponownie później."
+  },
+  "updCheck": {
+    "message": "Sprawdź aktualizacje"
+  },
+  "updApply": {
+    "message": "Aktualizuj teraz"
+  },
+  "tipUpdCheck": {
+    "message": "Od razu pyta sklep z rozszerzeniami o nowszą wersję, zamiast czekać na sprawdzenie przez przeglądarkę"
+  },
+  "tipUpdApply": {
+    "message": "Uruchamia ponownie ClickFix Warden, aby dokończyć aktualizację, trwa to sekundę"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, wersja $1 jest gotowa, otwórz, aby ją zainstalować"
+  },
+  "btnCancel": {
+    "message": "Anuluj"
+  },
+  "logClearBody": {
+    "message": "Tej operacji nie można cofnąć."
   }
 }

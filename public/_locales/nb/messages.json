@@ -327,7 +327,7 @@
     "message": "Slutt å stole på nettstedet"
   },
   "popupUpdated": {
-    "message": "Oppdatert $1, regelversjon $2"
+    "message": "Oppdatert $1"
   },
   "popupFeedNone": {
     "message": "Databasen er ikke lastet ned ennå"
@@ -351,7 +351,7 @@
     "message": "Oppdaterer"
   },
   "popupRulesLine": {
-    "message": "Gjenkjenningsregler versjon $1, $2"
+    "message": "Gjenkjenningsregler fra $1, $2"
   },
   "popupRulesBundled": {
     "message": "innebygde"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Nettleserstandard"
+  },
+  "updTitle": {
+    "message": "Oppdateringer"
+  },
+  "updVersion": {
+    "message": "Versjon $1"
+  },
+  "updCurrent": {
+    "message": "Du har den nyeste versjonen."
+  },
+  "updAuto": {
+    "message": "Oppdateringer installeres av seg selv fra utvidelsesbutikken."
+  },
+  "updChecking": {
+    "message": "Ser etter oppdateringer"
+  },
+  "updDownloading": {
+    "message": "Versjon $1 ble funnet og lastes ned."
+  },
+  "updReady": {
+    "message": "Versjon $1 er klar til å installeres."
+  },
+  "updThrottled": {
+    "message": "Butikken ble spurt for et øyeblikk siden, prøv igjen om noen minutter."
+  },
+  "updError": {
+    "message": "Fikk ikke kontakt med butikken, prøv igjen senere."
+  },
+  "updCheck": {
+    "message": "Se etter oppdateringer"
+  },
+  "updApply": {
+    "message": "Oppdater nå"
+  },
+  "tipUpdCheck": {
+    "message": "Spør utvidelsesbutikken etter en nyere versjon nå i stedet for å vente på nettleserens egen sjekk"
+  },
+  "tipUpdApply": {
+    "message": "Starter ClickFix Warden på nytt for å fullføre oppdateringen, det tar et sekund"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, versjon $1 er klar, åpne for å installere den"
+  },
+  "btnCancel": {
+    "message": "Avbryt"
+  },
+  "logClearBody": {
+    "message": "Dette kan ikke angres."
   }
 }

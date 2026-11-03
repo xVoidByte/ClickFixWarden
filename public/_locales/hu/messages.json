@@ -327,7 +327,7 @@
     "message": "Megbízhatóság visszavonása"
   },
   "popupUpdated": {
-    "message": "Frissítve $1, szabályverzió $2"
+    "message": "Frissítve $1"
   },
   "popupFeedNone": {
     "message": "Az adatbázis még nincs letöltve"
@@ -351,7 +351,7 @@
     "message": "Frissítés folyamatban"
   },
   "popupRulesLine": {
-    "message": "Észlelési szabályok verziója $1, $2"
+    "message": "Észlelési szabályok ($1), $2"
   },
   "popupRulesBundled": {
     "message": "beépített"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "Böngésző alapértelmezése"
+  },
+  "updTitle": {
+    "message": "Frissítések"
+  },
+  "updVersion": {
+    "message": "Verzió $1"
+  },
+  "updCurrent": {
+    "message": "A legújabb verzió van telepítve."
+  },
+  "updAuto": {
+    "message": "A frissítések maguktól települnek a bővítményáruházból."
+  },
+  "updChecking": {
+    "message": "Frissítések keresése folyamatban"
+  },
+  "updDownloading": {
+    "message": "Új verzió érhető el ($1), a letöltése folyamatban van."
+  },
+  "updReady": {
+    "message": "Az új verzió ($1) készen áll a telepítésre."
+  },
+  "updThrottled": {
+    "message": "Az áruházat az imént kérdezte le, próbálja újra néhány perc múlva."
+  },
+  "updError": {
+    "message": "Az áruház nem érhető el, próbálja újra később."
+  },
+  "updCheck": {
+    "message": "Frissítések keresése"
+  },
+  "updApply": {
+    "message": "Frissítés most"
+  },
+  "tipUpdCheck": {
+    "message": "Azonnal megkérdezi a bővítményáruházat, van-e újabb verzió, ahelyett hogy a böngésző saját ellenőrzésére várna"
+  },
+  "tipUpdApply": {
+    "message": "Újraindítja a ClickFix Warden bővítményt a frissítés befejezéséhez, ez egy másodpercig tart"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden, az új verzió ($1) készen áll, nyissa meg a telepítéshez"
+  },
+  "btnCancel": {
+    "message": "Mégse"
+  },
+  "logClearBody": {
+    "message": "Ez nem vonható vissza."
   }
 }

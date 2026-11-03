@@ -327,7 +327,7 @@
     "message": "不再信任此网站"
   },
   "popupUpdated": {
-    "message": "更新于 $1，规则版本 $2"
+    "message": "更新于 $1"
   },
   "popupFeedNone": {
     "message": "数据库尚未下载"
@@ -351,7 +351,7 @@
     "message": "正在更新"
   },
   "popupRulesLine": {
-    "message": "检测规则版本 $1，$2"
+    "message": "$1 的检测规则，$2"
   },
   "popupRulesBundled": {
     "message": "内置"
@@ -787,5 +787,53 @@
   },
   "langBrowser": {
     "message": "浏览器默认"
+  },
+  "updTitle": {
+    "message": "更新"
+  },
+  "updVersion": {
+    "message": "版本 $1"
+  },
+  "updCurrent": {
+    "message": "你使用的已是最新版本。"
+  },
+  "updAuto": {
+    "message": "更新会从扩展程序商店自动安装。"
+  },
+  "updChecking": {
+    "message": "正在检查更新"
+  },
+  "updDownloading": {
+    "message": "已找到版本 $1，正在下载。"
+  },
+  "updReady": {
+    "message": "版本 $1 已准备好安装。"
+  },
+  "updThrottled": {
+    "message": "刚刚已向商店查询过，请过几分钟再试。"
+  },
+  "updError": {
+    "message": "无法连接商店，请稍后再试。"
+  },
+  "updCheck": {
+    "message": "检查更新"
+  },
+  "updApply": {
+    "message": "立即更新"
+  },
+  "tipUpdCheck": {
+    "message": "立即向扩展程序商店查询新版本，而不是等待浏览器自行检查"
+  },
+  "tipUpdApply": {
+    "message": "重启 ClickFix Warden 以完成更新，只需一秒钟"
+  },
+  "tipActionUpdate": {
+    "message": "ClickFix Warden，版本 $1 已准备好，打开即可安装"
+  },
+  "btnCancel": {
+    "message": "取消"
+  },
+  "logClearBody": {
+    "message": "此操作无法撤销。"
   }
 }
